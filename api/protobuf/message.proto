@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package message;
+
+option go_package = "https://github.com/tredoc/go-messaging-platform/message";
+
+service MessageService {
+    rpc GetMessageStatus (GetMessageStatusRequest) returns (GetMessageStatusResponse) {}
+}
+
+message GetMessageStatusRequest {
+    int64 message_id = 1;
+}
+
+message GetMessageStatusResponse {
+    string status = 1;
+}

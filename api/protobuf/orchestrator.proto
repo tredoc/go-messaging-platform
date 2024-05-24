@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package orchestrator;
+
+option go_package = "https://github.com/tredoc/go-messaging-platform/orchestrator";
+
+enum MessageType {
+    SMS = 0;
+    EMAIL = 1;
+}
+
+service Orchestrator {
+    rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {}
+}
+
+message SendMessageRequest {
+    string message = 1;
+    int64 template_id = 2;
+    MessageType type = 3;
+    string sender = 4;
+    string receiver = 5;
+}
+
+message SendMessageResponse {
+    string message = 1;
+}

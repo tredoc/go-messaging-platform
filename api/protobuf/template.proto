@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package template;
+
+option go_package = "https://github.com/tredoc/go-messaging-platform/template";
+
+enum TemplateType {
+  SMS = 0;
+  EMAIL = 1;
+}
+
+service Template {
+  rpc CreateTemplate(CreateTemplateRequest) returns (CreateTemplateResponse) {}
+  rpc GetTemplateByID(GetTemplateByIDRequest) returns (GetTemplateByIDResponse) {}
+  rpc DeleteTemplateByID(DeleteTemplateByIDRequest) returns (DeleteTemplateByIDResponse) {}
+}
+
+message CreateTemplateRequest {
+  string template = 1;
+  TemplateType type = 2;
+}
+
+message CreateTemplateResponse {
+  string id = 1;
+}
+
+message GetTemplateByIDRequest {
+  string id = 1;
+}
+
+message GetTemplateByIDResponse {
+  string name = 1;
+}
+
+message DeleteTemplateByIDRequest {
+  string id = 1;
+}
+
+message DeleteTemplateByIDResponse {
+  string id = 1;
+}
