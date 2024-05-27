@@ -2,10 +2,16 @@ syntax = "proto3";
 
 package message;
 
-option go_package = "https://github.com/tredoc/go-messaging-platform/message";
+import "google/api/annotations.proto";
+
+option go_package = "https://github.com/tredoc/go-messaging-platform/pb";
 
 service MessageService {
-    rpc GetMessageStatus (GetMessageStatusRequest) returns (GetMessageStatusResponse) {}
+    rpc GetMessageStatus (GetMessageStatusRequest) returns (GetMessageStatusResponse) {
+        option (google.api.http) = {
+            get: "/message/{message_id}"
+        };
+    }
 }
 
 message GetMessageStatusRequest {

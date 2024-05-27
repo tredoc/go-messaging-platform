@@ -2,7 +2,9 @@ syntax = "proto3";
 
 package orchestrator;
 
-option go_package = "https://github.com/tredoc/go-messaging-platform/orchestrator";
+import "google/api/annotations.proto";
+
+option go_package = "https://github.com/tredoc/go-messaging-platform/pb";
 
 enum MessageType {
     SMS = 0;
@@ -10,7 +12,12 @@ enum MessageType {
 }
 
 service Orchestrator {
-    rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {}
+    rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {
+        option (google.api.http) = {
+            post: "/send"
+            body: "*"
+        };
+    }
 }
 
 message SendMessageRequest {
@@ -22,5 +29,5 @@ message SendMessageRequest {
 }
 
 message SendMessageResponse {
-    string message = 1;
+    string status = 1;
 }

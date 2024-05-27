@@ -2,7 +2,9 @@ syntax = "proto3";
 
 package template;
 
-option go_package = "https://github.com/tredoc/go-messaging-platform/template";
+import "google/api/annotations.proto";
+
+option go_package = "https://github.com/tredoc/go-messaging-platform/pb";
 
 enum TemplateType {
   SMS = 0;
@@ -11,7 +13,13 @@ enum TemplateType {
 
 service Template {
   rpc CreateTemplate(CreateTemplateRequest) returns (CreateTemplateResponse) {}
-  rpc GetTemplateByID(GetTemplateByIDRequest) returns (GetTemplateByIDResponse) {}
+
+  rpc GetTemplateByID(GetTemplateByIDRequest) returns (GetTemplateByIDResponse) {
+    option (google.api.http) = {
+      get: "/template/{id}"
+    };
+  }
+
   rpc DeleteTemplateByID(DeleteTemplateByIDRequest) returns (DeleteTemplateByIDResponse) {}
 }
 
