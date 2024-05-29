@@ -19,87 +19,87 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Orchestrator_SendMessage_FullMethodName = "/orchestrator.Orchestrator/SendMessage"
+	OrchestratorService_SendMessage_FullMethodName = "/orchestrator.OrchestratorService/SendMessage"
 )
 
-// OrchestratorClient is the client API for Orchestrator service.
+// OrchestratorServiceClient is the client API for OrchestratorService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type OrchestratorClient interface {
+type OrchestratorServiceClient interface {
 	SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error)
 }
 
-type orchestratorClient struct {
+type orchestratorServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewOrchestratorClient(cc grpc.ClientConnInterface) OrchestratorClient {
-	return &orchestratorClient{cc}
+func NewOrchestratorServiceClient(cc grpc.ClientConnInterface) OrchestratorServiceClient {
+	return &orchestratorServiceClient{cc}
 }
 
-func (c *orchestratorClient) SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error) {
+func (c *orchestratorServiceClient) SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error) {
 	out := new(SendMessageResponse)
-	err := c.cc.Invoke(ctx, Orchestrator_SendMessage_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, OrchestratorService_SendMessage_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// OrchestratorServer is the server API for Orchestrator service.
-// All implementations should embed UnimplementedOrchestratorServer
+// OrchestratorServiceServer is the server API for OrchestratorService service.
+// All implementations should embed UnimplementedOrchestratorServiceServer
 // for forward compatibility
-type OrchestratorServer interface {
+type OrchestratorServiceServer interface {
 	SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error)
 }
 
-// UnimplementedOrchestratorServer should be embedded to have forward compatible implementations.
-type UnimplementedOrchestratorServer struct {
+// UnimplementedOrchestratorServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedOrchestratorServiceServer struct {
 }
 
-func (UnimplementedOrchestratorServer) SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error) {
+func (UnimplementedOrchestratorServiceServer) SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendMessage not implemented")
 }
 
-// UnsafeOrchestratorServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to OrchestratorServer will
+// UnsafeOrchestratorServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to OrchestratorServiceServer will
 // result in compilation errors.
-type UnsafeOrchestratorServer interface {
-	mustEmbedUnimplementedOrchestratorServer()
+type UnsafeOrchestratorServiceServer interface {
+	mustEmbedUnimplementedOrchestratorServiceServer()
 }
 
-func RegisterOrchestratorServer(s grpc.ServiceRegistrar, srv OrchestratorServer) {
-	s.RegisterService(&Orchestrator_ServiceDesc, srv)
+func RegisterOrchestratorServiceServer(s grpc.ServiceRegistrar, srv OrchestratorServiceServer) {
+	s.RegisterService(&OrchestratorService_ServiceDesc, srv)
 }
 
-func _Orchestrator_SendMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OrchestratorService_SendMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SendMessageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrchestratorServer).SendMessage(ctx, in)
+		return srv.(OrchestratorServiceServer).SendMessage(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Orchestrator_SendMessage_FullMethodName,
+		FullMethod: OrchestratorService_SendMessage_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrchestratorServer).SendMessage(ctx, req.(*SendMessageRequest))
+		return srv.(OrchestratorServiceServer).SendMessage(ctx, req.(*SendMessageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Orchestrator_ServiceDesc is the grpc.ServiceDesc for Orchestrator service.
+// OrchestratorService_ServiceDesc is the grpc.ServiceDesc for OrchestratorService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Orchestrator_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "orchestrator.Orchestrator",
-	HandlerType: (*OrchestratorServer)(nil),
+var OrchestratorService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "orchestrator.OrchestratorService",
+	HandlerType: (*OrchestratorServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "SendMessage",
-			Handler:    _Orchestrator_SendMessage_Handler,
+			Handler:    _OrchestratorService_SendMessage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

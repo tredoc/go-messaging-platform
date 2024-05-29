@@ -7,15 +7,15 @@ import "google/api/annotations.proto";
 option go_package = "https://github.com/tredoc/go-messaging-platform/pb";
 
 service MessageService {
-    rpc GetMessageStatus (GetMessageStatusRequest) returns (GetMessageStatusResponse) {
+    rpc GetMessageStatus(GetMessageStatusRequest) returns (GetMessageStatusResponse) {
         option (google.api.http) = {
-            get: "/message/{message_id}"
+            get: "/messages/{id}"
         };
     }
 }
 
 message GetMessageStatusRequest {
-    int64 message_id = 1;
+    int64 id = 1;
 }
 
 message GetMessageStatusResponse {

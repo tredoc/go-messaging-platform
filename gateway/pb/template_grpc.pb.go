@@ -19,161 +19,161 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Template_CreateTemplate_FullMethodName     = "/template.Template/CreateTemplate"
-	Template_GetTemplateByID_FullMethodName    = "/template.Template/GetTemplateByID"
-	Template_DeleteTemplateByID_FullMethodName = "/template.Template/DeleteTemplateByID"
+	TemplateService_CreateTemplate_FullMethodName     = "/template.TemplateService/CreateTemplate"
+	TemplateService_GetTemplateByID_FullMethodName    = "/template.TemplateService/GetTemplateByID"
+	TemplateService_DeleteTemplateByID_FullMethodName = "/template.TemplateService/DeleteTemplateByID"
 )
 
-// TemplateClient is the client API for Template service.
+// TemplateServiceClient is the client API for TemplateService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type TemplateClient interface {
+type TemplateServiceClient interface {
 	CreateTemplate(ctx context.Context, in *CreateTemplateRequest, opts ...grpc.CallOption) (*CreateTemplateResponse, error)
 	GetTemplateByID(ctx context.Context, in *GetTemplateByIDRequest, opts ...grpc.CallOption) (*GetTemplateByIDResponse, error)
 	DeleteTemplateByID(ctx context.Context, in *DeleteTemplateByIDRequest, opts ...grpc.CallOption) (*DeleteTemplateByIDResponse, error)
 }
 
-type templateClient struct {
+type templateServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewTemplateClient(cc grpc.ClientConnInterface) TemplateClient {
-	return &templateClient{cc}
+func NewTemplateServiceClient(cc grpc.ClientConnInterface) TemplateServiceClient {
+	return &templateServiceClient{cc}
 }
 
-func (c *templateClient) CreateTemplate(ctx context.Context, in *CreateTemplateRequest, opts ...grpc.CallOption) (*CreateTemplateResponse, error) {
+func (c *templateServiceClient) CreateTemplate(ctx context.Context, in *CreateTemplateRequest, opts ...grpc.CallOption) (*CreateTemplateResponse, error) {
 	out := new(CreateTemplateResponse)
-	err := c.cc.Invoke(ctx, Template_CreateTemplate_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, TemplateService_CreateTemplate_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *templateClient) GetTemplateByID(ctx context.Context, in *GetTemplateByIDRequest, opts ...grpc.CallOption) (*GetTemplateByIDResponse, error) {
+func (c *templateServiceClient) GetTemplateByID(ctx context.Context, in *GetTemplateByIDRequest, opts ...grpc.CallOption) (*GetTemplateByIDResponse, error) {
 	out := new(GetTemplateByIDResponse)
-	err := c.cc.Invoke(ctx, Template_GetTemplateByID_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, TemplateService_GetTemplateByID_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *templateClient) DeleteTemplateByID(ctx context.Context, in *DeleteTemplateByIDRequest, opts ...grpc.CallOption) (*DeleteTemplateByIDResponse, error) {
+func (c *templateServiceClient) DeleteTemplateByID(ctx context.Context, in *DeleteTemplateByIDRequest, opts ...grpc.CallOption) (*DeleteTemplateByIDResponse, error) {
 	out := new(DeleteTemplateByIDResponse)
-	err := c.cc.Invoke(ctx, Template_DeleteTemplateByID_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, TemplateService_DeleteTemplateByID_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// TemplateServer is the server API for Template service.
-// All implementations should embed UnimplementedTemplateServer
+// TemplateServiceServer is the server API for TemplateService service.
+// All implementations should embed UnimplementedTemplateServiceServer
 // for forward compatibility
-type TemplateServer interface {
+type TemplateServiceServer interface {
 	CreateTemplate(context.Context, *CreateTemplateRequest) (*CreateTemplateResponse, error)
 	GetTemplateByID(context.Context, *GetTemplateByIDRequest) (*GetTemplateByIDResponse, error)
 	DeleteTemplateByID(context.Context, *DeleteTemplateByIDRequest) (*DeleteTemplateByIDResponse, error)
 }
 
-// UnimplementedTemplateServer should be embedded to have forward compatible implementations.
-type UnimplementedTemplateServer struct {
+// UnimplementedTemplateServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedTemplateServiceServer struct {
 }
 
-func (UnimplementedTemplateServer) CreateTemplate(context.Context, *CreateTemplateRequest) (*CreateTemplateResponse, error) {
+func (UnimplementedTemplateServiceServer) CreateTemplate(context.Context, *CreateTemplateRequest) (*CreateTemplateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateTemplate not implemented")
 }
-func (UnimplementedTemplateServer) GetTemplateByID(context.Context, *GetTemplateByIDRequest) (*GetTemplateByIDResponse, error) {
+func (UnimplementedTemplateServiceServer) GetTemplateByID(context.Context, *GetTemplateByIDRequest) (*GetTemplateByIDResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTemplateByID not implemented")
 }
-func (UnimplementedTemplateServer) DeleteTemplateByID(context.Context, *DeleteTemplateByIDRequest) (*DeleteTemplateByIDResponse, error) {
+func (UnimplementedTemplateServiceServer) DeleteTemplateByID(context.Context, *DeleteTemplateByIDRequest) (*DeleteTemplateByIDResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteTemplateByID not implemented")
 }
 
-// UnsafeTemplateServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to TemplateServer will
+// UnsafeTemplateServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to TemplateServiceServer will
 // result in compilation errors.
-type UnsafeTemplateServer interface {
-	mustEmbedUnimplementedTemplateServer()
+type UnsafeTemplateServiceServer interface {
+	mustEmbedUnimplementedTemplateServiceServer()
 }
 
-func RegisterTemplateServer(s grpc.ServiceRegistrar, srv TemplateServer) {
-	s.RegisterService(&Template_ServiceDesc, srv)
+func RegisterTemplateServiceServer(s grpc.ServiceRegistrar, srv TemplateServiceServer) {
+	s.RegisterService(&TemplateService_ServiceDesc, srv)
 }
 
-func _Template_CreateTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _TemplateService_CreateTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateTemplateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TemplateServer).CreateTemplate(ctx, in)
+		return srv.(TemplateServiceServer).CreateTemplate(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Template_CreateTemplate_FullMethodName,
+		FullMethod: TemplateService_CreateTemplate_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TemplateServer).CreateTemplate(ctx, req.(*CreateTemplateRequest))
+		return srv.(TemplateServiceServer).CreateTemplate(ctx, req.(*CreateTemplateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Template_GetTemplateByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _TemplateService_GetTemplateByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetTemplateByIDRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TemplateServer).GetTemplateByID(ctx, in)
+		return srv.(TemplateServiceServer).GetTemplateByID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Template_GetTemplateByID_FullMethodName,
+		FullMethod: TemplateService_GetTemplateByID_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TemplateServer).GetTemplateByID(ctx, req.(*GetTemplateByIDRequest))
+		return srv.(TemplateServiceServer).GetTemplateByID(ctx, req.(*GetTemplateByIDRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Template_DeleteTemplateByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _TemplateService_DeleteTemplateByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteTemplateByIDRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TemplateServer).DeleteTemplateByID(ctx, in)
+		return srv.(TemplateServiceServer).DeleteTemplateByID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Template_DeleteTemplateByID_FullMethodName,
+		FullMethod: TemplateService_DeleteTemplateByID_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TemplateServer).DeleteTemplateByID(ctx, req.(*DeleteTemplateByIDRequest))
+		return srv.(TemplateServiceServer).DeleteTemplateByID(ctx, req.(*DeleteTemplateByIDRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Template_ServiceDesc is the grpc.ServiceDesc for Template service.
+// TemplateService_ServiceDesc is the grpc.ServiceDesc for TemplateService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Template_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "template.Template",
-	HandlerType: (*TemplateServer)(nil),
+var TemplateService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "template.TemplateService",
+	HandlerType: (*TemplateServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "CreateTemplate",
-			Handler:    _Template_CreateTemplate_Handler,
+			Handler:    _TemplateService_CreateTemplate_Handler,
 		},
 		{
 			MethodName: "GetTemplateByID",
-			Handler:    _Template_GetTemplateByID_Handler,
+			Handler:    _TemplateService_GetTemplateByID_Handler,
 		},
 		{
 			MethodName: "DeleteTemplateByID",
-			Handler:    _Template_DeleteTemplateByID_Handler,
+			Handler:    _TemplateService_DeleteTemplateByID_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

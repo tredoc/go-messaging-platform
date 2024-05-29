@@ -11,10 +11,10 @@ enum MessageType {
     EMAIL = 1;
 }
 
-service Orchestrator {
+service OrchestratorService {
     rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {
         option (google.api.http) = {
-            post: "/send"
+            post: "/send-message"
             body: "*"
         };
     }

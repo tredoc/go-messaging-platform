@@ -1,16 +1,23 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	pb "github.com/tredoc/go-grpc/proto/gen"
+	"github.com/tredoc/go-messaging-platform/message/pb"
+
 	"github.com/tredoc/go-messaging-platform/message/internal/config"
 	"google.golang.org/grpc"
 	"log"
 	"net"
 )
 
-type Responser struct {
-	pb.UnimplementedResponserServer
+type GRPCServer struct {
+	pb.UnimplementedMessageServiceServer
+}
+
+func (gs GRPCServer) GetMessageStatus(_ context.Context, req *pb.GetMessageStatusRequest) (*pb.GetMessageStatusResponse, error) {
+	id := req.GetId()
+	return &pb.GetMessageStatusResponse{Status: fmt.Sprintf("message with id %d is sent", id)}, nil
 }
 
 func main() {
@@ -26,7 +33,7 @@ func main() {
 
 	var opts []grpc.ServerOption
 	grpcServer := grpc.NewServer(opts...)
-	pb.RegisterResponserServer(grpcServer, &Responser{})
+	pb.RegisterMessageServiceServer(grpcServer, &GRPCServer{})
 
 	log.Printf("Starting message server on port: %s\n", cfg.Port)
 

@@ -3,8 +3,9 @@ module github.com/tredoc/go-messaging-platform/orchestrator
 go 1.22
 
 require (
-	github.com/tredoc/go-grpc v0.0.0-20240411192520-d3dc236decf5
+	google.golang.org/genproto/googleapis/api v0.0.0-20240318140521-94a12d6c2237
 	google.golang.org/grpc v1.64.0
+	google.golang.org/protobuf v1.33.0
 )
 
 require (
@@ -12,5 +13,4 @@ require (
 	golang.org/x/sys v0.18.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240318140521-94a12d6c2237 // indirect
-	google.golang.org/protobuf v1.33.0 // indirect
 )

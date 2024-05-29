@@ -22,4 +22,7 @@ run/orchestrator:
 tools:
 	@go run tools/tools.go
 
-.PHONY: proto/message, proto/orchestrator, proto/template, proto/gateway, proto/all, run/orchestrator, tools
+dev:
+	@docker compose up
+
+.PHONY: proto/message, proto/orchestrator, proto/template, proto/gateway, proto/all, run/orchestrator, tools, dev

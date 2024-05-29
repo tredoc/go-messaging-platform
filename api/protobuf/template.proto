@@ -11,16 +11,25 @@ enum TemplateType {
   EMAIL = 1;
 }
 
-service Template {
-  rpc CreateTemplate(CreateTemplateRequest) returns (CreateTemplateResponse) {}
-
-  rpc GetTemplateByID(GetTemplateByIDRequest) returns (GetTemplateByIDResponse) {
+service TemplateService {
+  rpc CreateTemplate(CreateTemplateRequest) returns (CreateTemplateResponse) {
     option (google.api.http) = {
-      get: "/template/{id}"
+      post: "/templates"
+      body: "*"
     };
   }
 
-  rpc DeleteTemplateByID(DeleteTemplateByIDRequest) returns (DeleteTemplateByIDResponse) {}
+  rpc GetTemplateByID(GetTemplateByIDRequest) returns (GetTemplateByIDResponse) {
+    option (google.api.http) = {
+      get: "/templates/{id}"
+    };
+  }
+
+  rpc DeleteTemplateByID(DeleteTemplateByIDRequest) returns (DeleteTemplateByIDResponse) {
+    option (google.api.http) = {
+      delete: "/templates/{id}"
+    };
+  }
 }
 
 message CreateTemplateRequest {

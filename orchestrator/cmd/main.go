@@ -1,16 +1,21 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	pb "github.com/tredoc/go-grpc/proto/gen"
 	"github.com/tredoc/go-messaging-platform/orchestrator/internal/config"
+	"github.com/tredoc/go-messaging-platform/orchestrator/pb"
 	"google.golang.org/grpc"
 	"log"
 	"net"
 )
 
-type Responser struct {
-	pb.UnimplementedResponserServer
+type GRPCServer struct {
+	pb.UnimplementedOrchestratorServiceServer
+}
+
+func (gs GRPCServer) SendMessage(_ context.Context, _ *pb.SendMessageRequest) (*pb.SendMessageResponse, error) {
+	return &pb.SendMessageResponse{Status: "Message has been sent"}, nil
 }
 
 func main() {
@@ -26,7 +31,7 @@ func main() {
 
 	var opts []grpc.ServerOption
 	grpcServer := grpc.NewServer(opts...)
-	pb.RegisterResponserServer(grpcServer, &Responser{})
+	pb.RegisterOrchestratorServiceServer(grpcServer, &GRPCServer{})
 
 	log.Printf("Starting orchestrator server on port: %s\n", cfg.Port)
 

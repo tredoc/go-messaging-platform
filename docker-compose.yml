@@ -10,6 +10,8 @@ services:
       - "3000:3000"
     networks:
       - app-network
+    volumes:
+      - ./gateway:/app
 
   orchestrator:
     container_name: "msg-orchestrator"
@@ -22,6 +24,8 @@ services:
       - "4000:4000"
     networks:
       - app-network
+    volumes:
+      - ./orchestrator:/app
 
   message:
     container_name: "msg-message"
@@ -34,6 +38,8 @@ services:
       - "4001:4001"
     networks:
       - app-network
+    volumes:
+      - ./message:/app
 
   template:
     container_name: "msg-template"
@@ -46,6 +52,8 @@ services:
       - "4002:4002"
     networks:
       - app-network
+    volumes:
+      - ./template:/app
 
 networks:
   app-network:

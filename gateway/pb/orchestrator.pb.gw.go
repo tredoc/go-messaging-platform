@@ -31,7 +31,7 @@ var _ = runtime.String
 var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
-func request_Orchestrator_SendMessage_0(ctx context.Context, marshaler runtime.Marshaler, client OrchestratorClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_OrchestratorService_SendMessage_0(ctx context.Context, marshaler runtime.Marshaler, client OrchestratorServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq SendMessageRequest
 	var metadata runtime.ServerMetadata
 
@@ -44,7 +44,7 @@ func request_Orchestrator_SendMessage_0(ctx context.Context, marshaler runtime.M
 
 }
 
-func local_request_Orchestrator_SendMessage_0(ctx context.Context, marshaler runtime.Marshaler, server OrchestratorServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_OrchestratorService_SendMessage_0(ctx context.Context, marshaler runtime.Marshaler, server OrchestratorServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq SendMessageRequest
 	var metadata runtime.ServerMetadata
 
@@ -57,13 +57,13 @@ func local_request_Orchestrator_SendMessage_0(ctx context.Context, marshaler run
 
 }
 
-// RegisterOrchestratorHandlerServer registers the http handlers for service Orchestrator to "mux".
-// UnaryRPC     :call OrchestratorServer directly.
+// RegisterOrchestratorServiceHandlerServer registers the http handlers for service OrchestratorService to "mux".
+// UnaryRPC     :call OrchestratorServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterOrchestratorHandlerFromEndpoint instead.
-func RegisterOrchestratorHandlerServer(ctx context.Context, mux *runtime.ServeMux, server OrchestratorServer) error {
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterOrchestratorServiceHandlerFromEndpoint instead.
+func RegisterOrchestratorServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server OrchestratorServiceServer) error {
 
-	mux.Handle("POST", pattern_Orchestrator_SendMessage_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_OrchestratorService_SendMessage_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -71,12 +71,12 @@ func RegisterOrchestratorHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/orchestrator.Orchestrator/SendMessage", runtime.WithHTTPPathPattern("/send"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/orchestrator.OrchestratorService/SendMessage", runtime.WithHTTPPathPattern("/send-message"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Orchestrator_SendMessage_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_OrchestratorService_SendMessage_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -84,16 +84,16 @@ func RegisterOrchestratorHandlerServer(ctx context.Context, mux *runtime.ServeMu
 			return
 		}
 
-		forward_Orchestrator_SendMessage_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_OrchestratorService_SendMessage_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
 	return nil
 }
 
-// RegisterOrchestratorHandlerFromEndpoint is same as RegisterOrchestratorHandler but
+// RegisterOrchestratorServiceHandlerFromEndpoint is same as RegisterOrchestratorServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterOrchestratorHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterOrchestratorServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.NewClient(endpoint, opts...)
 	if err != nil {
 		return err
@@ -113,41 +113,41 @@ func RegisterOrchestratorHandlerFromEndpoint(ctx context.Context, mux *runtime.S
 		}()
 	}()
 
-	return RegisterOrchestratorHandler(ctx, mux, conn)
+	return RegisterOrchestratorServiceHandler(ctx, mux, conn)
 }
 
-// RegisterOrchestratorHandler registers the http handlers for service Orchestrator to "mux".
+// RegisterOrchestratorServiceHandler registers the http handlers for service OrchestratorService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterOrchestratorHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterOrchestratorHandlerClient(ctx, mux, NewOrchestratorClient(conn))
+func RegisterOrchestratorServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterOrchestratorServiceHandlerClient(ctx, mux, NewOrchestratorServiceClient(conn))
 }
 
-// RegisterOrchestratorHandlerClient registers the http handlers for service Orchestrator
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "OrchestratorClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "OrchestratorClient"
+// RegisterOrchestratorServiceHandlerClient registers the http handlers for service OrchestratorService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "OrchestratorServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "OrchestratorServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "OrchestratorClient" to call the correct interceptors.
-func RegisterOrchestratorHandlerClient(ctx context.Context, mux *runtime.ServeMux, client OrchestratorClient) error {
+// "OrchestratorServiceClient" to call the correct interceptors.
+func RegisterOrchestratorServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client OrchestratorServiceClient) error {
 
-	mux.Handle("POST", pattern_Orchestrator_SendMessage_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_OrchestratorService_SendMessage_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/orchestrator.Orchestrator/SendMessage", runtime.WithHTTPPathPattern("/send"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/orchestrator.OrchestratorService/SendMessage", runtime.WithHTTPPathPattern("/send-message"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Orchestrator_SendMessage_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_OrchestratorService_SendMessage_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Orchestrator_SendMessage_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_OrchestratorService_SendMessage_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -155,9 +155,9 @@ func RegisterOrchestratorHandlerClient(ctx context.Context, mux *runtime.ServeMu
 }
 
 var (
-	pattern_Orchestrator_SendMessage_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"send"}, ""))
+	pattern_OrchestratorService_SendMessage_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"send-message"}, ""))
 )
 
 var (
-	forward_Orchestrator_SendMessage_0 = runtime.ForwardResponseMessage
+	forward_OrchestratorService_SendMessage_0 = runtime.ForwardResponseMessage
 )

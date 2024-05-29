@@ -1,2 +1,12 @@
 .idea
 .vscode
+
+/gateway/bin
+/message/bin
+/orchestrator/bin
+/template/bin
+
+/gateway/tmp
+/message/tmp
+/orchestrator/tmp
+/template/tmp
