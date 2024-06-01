@@ -42,7 +42,9 @@ The platform is composed of the following components:
 
 ```
 
-## Setup
+## Setup  
+- rename .env.example to .env
+
 ### Hint how to install protoc
 `go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2`  
 `go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28`  

@@ -8,12 +8,12 @@ import (
 type Config struct {
 	Port         string
 	Env          string
-	MessagePort  string
-	TemplatePort string
+	MessageAddr  string
+	TemplateAddr string
 }
 
 func GetConfig() (*Config, error) {
-	port := os.Getenv("PORT")
+	port := os.Getenv("ORCHESTRATOR_PORT")
 	if port == "" {
 		return nil, errors.New("server port is not specified")
 	}
@@ -23,20 +23,20 @@ func GetConfig() (*Config, error) {
 		return nil, errors.New("environment is not specified")
 	}
 
-	messagePort := os.Getenv("MESSAGE_PORT")
-	if messagePort == "" {
-		return nil, errors.New("message service port is not specified")
+	messageAddr := os.Getenv("MESSAGE_ADDR")
+	if messageAddr == "" {
+		return nil, errors.New("message service address is not specified")
 	}
 
-	templatePort := os.Getenv("TEMPLATE_PORT")
-	if templatePort == "" {
-		return nil, errors.New("template service port is not specified")
+	templateAddr := os.Getenv("TEMPLATE_ADDR")
+	if templateAddr == "" {
+		return nil, errors.New("template service address is not specified")
 	}
 
 	return &Config{
 		Port:         port,
 		Env:          env,
-		MessagePort:  messagePort,
-		TemplatePort: templatePort,
+		MessageAddr:  messageAddr,
+		TemplateAddr: templateAddr,
 	}, nil
 }

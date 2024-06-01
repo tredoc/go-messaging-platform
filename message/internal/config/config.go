@@ -11,7 +11,7 @@ type Config struct {
 }
 
 func GetConfig() (*Config, error) {
-	port := os.Getenv("PORT")
+	port := os.Getenv("MESSAGE_PORT")
 	if port == "" {
 		return nil, errors.New("server port is not specified")
 	}

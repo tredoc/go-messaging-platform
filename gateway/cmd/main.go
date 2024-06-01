@@ -24,17 +24,17 @@ func main() {
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithInsecure()}
 
-	err = pb.RegisterOrchestratorServiceHandlerFromEndpoint(ctx, mux, "orchestrator:"+cfg.OrchestratorPort, opts)
+	err = pb.RegisterOrchestratorServiceHandlerFromEndpoint(ctx, mux, cfg.OrchestratorAddr, opts)
 	if err != nil {
 		log.Fatalf("failed to start HTTP/2 gateway: %v", err)
 	}
 
-	err = pb.RegisterTemplateServiceHandlerFromEndpoint(ctx, mux, "template:"+cfg.TemplatePort, opts)
+	err = pb.RegisterTemplateServiceHandlerFromEndpoint(ctx, mux, cfg.TemplateAddr, opts)
 	if err != nil {
 		log.Fatalf("failed to start HTTP/2 gateway: %v", err)
 	}
 
-	err = pb.RegisterMessageServiceHandlerFromEndpoint(ctx, mux, "message:"+cfg.MessagePort, opts)
+	err = pb.RegisterMessageServiceHandlerFromEndpoint(ctx, mux, cfg.MessageAddr, opts)
 	if err != nil {
 		log.Fatalf("failed to start HTTP/2 gateway: %v", err)
 	}

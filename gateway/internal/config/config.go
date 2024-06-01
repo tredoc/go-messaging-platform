@@ -8,13 +8,13 @@ import (
 type Config struct {
 	Port             string
 	Env              string
-	OrchestratorPort string
-	MessagePort      string
-	TemplatePort     string
+	OrchestratorAddr string
+	MessageAddr      string
+	TemplateAddr     string
 }
 
 func GetConfig() (*Config, error) {
-	port := os.Getenv("PORT")
+	port := os.Getenv("GATEWAY_PORT")
 	if port == "" {
 		return nil, errors.New("server port is not specified")
 	}
@@ -24,26 +24,26 @@ func GetConfig() (*Config, error) {
 		return nil, errors.New("environment is not specified")
 	}
 
-	orchestratorPort := os.Getenv("ORCHESTRATOR_PORT")
-	if orchestratorPort == "" {
-		return nil, errors.New("orchestrator service port is not specified")
+	orchestratorAddr := os.Getenv("ORCHESTRATOR_ADDR")
+	if orchestratorAddr == "" {
+		return nil, errors.New("orchestrator service address is not specified")
 	}
 
-	messagePort := os.Getenv("MESSAGE_PORT")
-	if messagePort == "" {
-		return nil, errors.New("message service port is not specified")
+	messageAddr := os.Getenv("MESSAGE_ADDR")
+	if messageAddr == "" {
+		return nil, errors.New("message service address is not specified")
 	}
 
-	templatePort := os.Getenv("TEMPLATE_PORT")
-	if templatePort == "" {
-		return nil, errors.New("template service port is not specified")
+	templateAddr := os.Getenv("TEMPLATE_ADDR")
+	if templateAddr == "" {
+		return nil, errors.New("template service address is not specified")
 	}
 
 	return &Config{
-		Port:             os.Getenv("PORT"),
-		Env:              os.Getenv("ENV"),
-		OrchestratorPort: os.Getenv("ORCHESTRATOR_PORT"),
-		MessagePort:      os.Getenv("MESSAGE_PORT"),
-		TemplatePort:     os.Getenv("TEMPLATE_PORT"),
+		Port:             port,
+		Env:              env,
+		OrchestratorAddr: orchestratorAddr,
+		MessageAddr:      messageAddr,
+		TemplateAddr:     templateAddr,
 	}, nil
 }
