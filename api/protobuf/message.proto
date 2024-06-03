@@ -6,18 +6,25 @@ import "google/api/annotations.proto";
 
 option go_package = "https://github.com/tredoc/go-messaging-platform/pb";
 
+enum MessageStatus {
+    NEW = 0;
+    SENDING = 1;
+    COMPLETED = 2;
+    FAILED = 3;
+}
+
 service MessageService {
     rpc GetMessageStatus(GetMessageStatusRequest) returns (GetMessageStatusResponse) {
         option (google.api.http) = {
-            get: "/messages/{id}"
+            get: "/messages/{uuid}"
         };
     }
 }
 
 message GetMessageStatusRequest {
-    int64 id = 1;
+    string uuid = 1;
 }
 
 message GetMessageStatusResponse {
-    string status = 1;
+    MessageStatus status = 1;
 }

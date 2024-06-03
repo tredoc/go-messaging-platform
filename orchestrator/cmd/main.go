@@ -15,7 +15,7 @@ type GRPCServer struct {
 }
 
 func (gs GRPCServer) SendMessage(_ context.Context, _ *pb.SendMessageRequest) (*pb.SendMessageResponse, error) {
-	return &pb.SendMessageResponse{Status: "Message has been sent"}, nil
+	return &pb.SendMessageResponse{Status: pb.OrchestratorMessageStatus_CREATED}, nil
 }
 
 func main() {

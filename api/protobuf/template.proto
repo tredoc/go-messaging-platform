@@ -19,15 +19,15 @@ service TemplateService {
     };
   }
 
-  rpc GetTemplateByID(GetTemplateByIDRequest) returns (GetTemplateByIDResponse) {
+  rpc GetTemplate(GetTemplateRequest) returns (GetTemplateResponse) {
     option (google.api.http) = {
-      get: "/templates/{id}"
+      get: "/templates/{uuid}"
     };
   }
 
-  rpc DeleteTemplateByID(DeleteTemplateByIDRequest) returns (DeleteTemplateByIDResponse) {
+  rpc DeleteTemplate(DeleteTemplateRequest) returns (DeleteTemplateResponse) {
     option (google.api.http) = {
-      delete: "/templates/{id}"
+      delete: "/templates/{uuid}"
     };
   }
 }
@@ -38,21 +38,24 @@ message CreateTemplateRequest {
 }
 
 message CreateTemplateResponse {
-  string id = 1;
+  string uuid = 1;
+  string status = 2;
 }
 
-message GetTemplateByIDRequest {
-  string id = 1;
+message GetTemplateRequest {
+  string uuid = 1;
 }
 
-message GetTemplateByIDResponse {
-  string name = 1;
+message GetTemplateResponse {
+  string uuid = 1;
+  string template = 2;
+  TemplateType type = 3;
 }
 
-message DeleteTemplateByIDRequest {
-  string id = 1;
+message DeleteTemplateRequest {
+  string uuid = 1;
 }
 
-message DeleteTemplateByIDResponse {
-  string id = 1;
+message DeleteTemplateResponse {
+  string status = 1;
 }

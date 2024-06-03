@@ -14,19 +14,22 @@ type GRPCServer struct {
 	pb.UnimplementedTemplateServiceServer
 }
 
-func (gs GRPCServer) GetTemplateByID(_ context.Context, req *pb.GetTemplateByIDRequest) (*pb.GetTemplateByIDResponse, error) {
-	id := req.GetId()
-	return &pb.GetTemplateByIDResponse{Name: "Random Template ID: " + id}, nil
+func (gs GRPCServer) CreateTemplate(_ context.Context, req *pb.CreateTemplateRequest) (*pb.CreateTemplateResponse, error) {
+	template := req.GetTemplate()
+	tt := req.GetType()
+	fmt.Println(tt, template)
+
+	return &pb.CreateTemplateResponse{Uuid: "New UUID", Status: "created"}, nil
 }
 
-func (gs GRPCServer) CreateTemplate(_ context.Context, in *pb.CreateTemplateRequest) (*pb.CreateTemplateResponse, error) {
-	fmt.Println(in)
-	return &pb.CreateTemplateResponse{Id: "new uuid"}, nil
+func (gs GRPCServer) GetTemplate(_ context.Context, req *pb.GetTemplateRequest) (*pb.GetTemplateResponse, error) {
+	uuid := req.GetUuid()
+	return &pb.GetTemplateResponse{Uuid: uuid, Template: "Random template string", Type: pb.TemplateType_EMAIL}, nil
 }
 
-func (gs GRPCServer) DeleteTemplateByID(_ context.Context, req *pb.DeleteTemplateByIDRequest) (*pb.DeleteTemplateByIDResponse, error) {
-	id := req.GetId()
-	return &pb.DeleteTemplateByIDResponse{Id: "deleted id: " + id}, nil
+func (gs GRPCServer) DeleteTemplate(_ context.Context, req *pb.DeleteTemplateRequest) (*pb.DeleteTemplateResponse, error) {
+	uuid := req.GetUuid()
+	return &pb.DeleteTemplateResponse{Status: "deleted id: " + uuid}, nil
 }
 
 func main() {

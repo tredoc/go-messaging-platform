@@ -16,8 +16,10 @@ type GRPCServer struct {
 }
 
 func (gs GRPCServer) GetMessageStatus(_ context.Context, req *pb.GetMessageStatusRequest) (*pb.GetMessageStatusResponse, error) {
-	id := req.GetId()
-	return &pb.GetMessageStatusResponse{Status: fmt.Sprintf("message with id %d is sent", id)}, nil
+	uuid := req.GetUuid()
+	fmt.Println(uuid)
+
+	return &pb.GetMessageStatusResponse{Status: pb.MessageStatus_NEW}, nil
 }
 
 func main() {

@@ -11,6 +11,11 @@ enum MessageType {
     EMAIL = 1;
 }
 
+enum OrchestratorMessageStatus {
+    CREATED = 0;
+    FAILED = 1;
+}
+
 service OrchestratorService {
     rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {
         option (google.api.http) = {
@@ -22,12 +27,12 @@ service OrchestratorService {
 
 message SendMessageRequest {
     string message = 1;
-    int64 template_id = 2;
+    string template_uuid = 2;
     MessageType type = 3;
     string sender = 4;
     string receiver = 5;
 }
 
 message SendMessageResponse {
-    string status = 1;
+    OrchestratorMessageStatus status = 1;
 }
