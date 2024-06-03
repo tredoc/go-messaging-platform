@@ -10,18 +10,18 @@ type Config struct {
 	Env  string
 }
 
-func GetConfig() (*Config, error) {
+func GetConfig() (Config, error) {
 	port := os.Getenv("MESSAGE_PORT")
 	if port == "" {
-		return nil, errors.New("server port is not specified")
+		return Config{}, errors.New("server port is not specified")
 	}
 
 	env := os.Getenv("ENV")
 	if env == "" {
-		return nil, errors.New("environment is not specified")
+		return Config{}, errors.New("environment is not specified")
 	}
 
-	return &Config{
+	return Config{
 		Port: port,
 		Env:  env,
 	}, nil

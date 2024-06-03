@@ -2,13 +2,10 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/tredoc/go-messaging-platform/gateway/internal/config"
-	"github.com/tredoc/go-messaging-platform/gateway/pb"
-	"google.golang.org/grpc"
+	"github.com/tredoc/go-messaging-platform/gateway/internal/server"
 	"log"
-	"net/http"
 )
 
 func main() {
@@ -22,24 +19,9 @@ func main() {
 	defer cancel()
 
 	mux := runtime.NewServeMux()
-	opts := []grpc.DialOption{grpc.WithInsecure()}
 
-	err = pb.RegisterOrchestratorServiceHandlerFromEndpoint(ctx, mux, cfg.OrchestratorAddr, opts)
+	err = server.Run(ctx, cfg, mux)
 	if err != nil {
-		log.Fatalf("failed to start HTTP/2 gateway: %v", err)
+		log.Fatal(err)
 	}
-
-	err = pb.RegisterTemplateServiceHandlerFromEndpoint(ctx, mux, cfg.TemplateAddr, opts)
-	if err != nil {
-		log.Fatalf("failed to start HTTP/2 gateway: %v", err)
-	}
-
-	err = pb.RegisterMessageServiceHandlerFromEndpoint(ctx, mux, cfg.MessageAddr, opts)
-	if err != nil {
-		log.Fatalf("failed to start HTTP/2 gateway: %v", err)
-	}
-
-	log.Printf("Starting grpc gateway on port: %s\n", cfg.Port)
-	http.ListenAndServe(fmt.Sprintf(":%s", cfg.Port), mux)
-
 }

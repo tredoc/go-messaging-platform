@@ -2,25 +2,11 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"github.com/tredoc/go-messaging-platform/message/pb"
-
 	"github.com/tredoc/go-messaging-platform/message/internal/config"
-	"google.golang.org/grpc"
+	"github.com/tredoc/go-messaging-platform/message/internal/handler"
+	"github.com/tredoc/go-messaging-platform/message/internal/server"
 	"log"
-	"net"
 )
-
-type GRPCServer struct {
-	pb.UnimplementedMessageServiceServer
-}
-
-func (gs GRPCServer) GetMessageStatus(_ context.Context, req *pb.GetMessageStatusRequest) (*pb.GetMessageStatusResponse, error) {
-	uuid := req.GetUuid()
-	fmt.Println(uuid)
-
-	return &pb.GetMessageStatusResponse{Status: pb.MessageStatus_NEW}, nil
-}
 
 func main() {
 	cfg, err := config.GetConfig()
@@ -28,18 +14,15 @@ func main() {
 		log.Fatalf("configuration error: %v", err)
 	}
 
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", cfg.Port))
+	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
+	grpcHandler := handler.NewGRPCMessageHandler()
+	GRPCServer := server.NewGRPCServer(grpcHandler)
+
+	err = server.Run(ctx, GRPCServer, cfg)
 	if err != nil {
-		log.Fatal("failed to listen:", err)
-	}
-
-	var opts []grpc.ServerOption
-	grpcServer := grpc.NewServer(opts...)
-	pb.RegisterMessageServiceServer(grpcServer, &GRPCServer{})
-
-	log.Printf("Starting message server on port: %s\n", cfg.Port)
-
-	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatal(err)
 	}
 }
