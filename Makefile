@@ -20,7 +20,13 @@ run/orchestrator:
 	@go run ./orchestrator/cmd/main.go
 
 tools:
-	@go run tools/tools.go
+	@echo "Installing gRPC tools"
+	@go get google.golang.org/genproto/googleapis/api@v0.0.0-20240528184218-531527333157
+	@go get google.golang.org/grpc@v1.64.0
+	@go get google.golang.org/protobuf@v1.34.1
+	@go get google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.4
+	@echo "Installing gRPC Gateway tools"
+	@go get github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@v2.20.0
 
 dev:
 	@docker compose up

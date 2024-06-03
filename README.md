@@ -46,7 +46,6 @@ The platform is composed of the following components:
 - rename .env.example to .env
 
 ### Hint how to install protoc
-`go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2`  
 `go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28`  
 `PB_REL="https://github.com/protocolbuffers/protobuf/releases"`  
 `curl -LO $PB_REL/download/v25.1/protoc-25.1-linux-x86_64.zip`  
@@ -55,9 +54,4 @@ The platform is composed of the following components:
 `sudo mv protoc3/include/* /usr/local/include/` 
 
 ### Hint how to install grpc gateway generator
-`go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest`  
-`go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest`  
-`go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest`  
-`go install google.golang.org/protobuf/cmd/protoc-gen-go@latest`  
-or use  
-`make tools`
+use `make tools`
