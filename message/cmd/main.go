@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/tredoc/go-messaging-platform/message/internal/application"
 	"github.com/tredoc/go-messaging-platform/message/internal/config"
 	"github.com/tredoc/go-messaging-platform/message/internal/handler"
 	"github.com/tredoc/go-messaging-platform/message/internal/server"
@@ -18,7 +19,8 @@ func main() {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	grpcHandler := handler.NewGRPCMessageHandler()
+	app := application.New()
+	grpcHandler := handler.NewGRPCMessageHandler(app)
 	GRPCServer := server.NewGRPCServer(grpcHandler)
 
 	err = server.Run(ctx, GRPCServer, cfg)
