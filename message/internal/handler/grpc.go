@@ -3,7 +3,7 @@ package handler
 import (
 	"context"
 	"github.com/tredoc/go-messaging-platform/message/internal/application"
-	query "github.com/tredoc/go-messaging-platform/message/internal/application/queries"
+	"github.com/tredoc/go-messaging-platform/message/internal/application/query"
 	"github.com/tredoc/go-messaging-platform/message/pb"
 )
 

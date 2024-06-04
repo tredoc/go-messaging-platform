@@ -1,6 +1,6 @@
 package application
 
-import query "github.com/tredoc/go-messaging-platform/message/internal/application/queries"
+import "github.com/tredoc/go-messaging-platform/message/internal/application/query"
 
 type Application struct {
 	Commands Commands
