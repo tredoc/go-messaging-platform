@@ -2,18 +2,23 @@ package command
 
 import (
 	"context"
-	"log"
+	"github.com/tredoc/go-messaging-platform/template/internal/domain/template"
 )
 
-type DeleteTemplate struct{}
-
-type DeleteTemplateHandler struct{}
-
-func NewDeleteTemplateHandler() DeleteTemplateHandler {
-	return DeleteTemplateHandler{}
+type DeleteTemplate struct {
+	UUID string
 }
 
-func (dt DeleteTemplateHandler) Handle(_ context.Context, _ DeleteTemplate) error {
-	log.Println("Delete template command invoked")
-	return nil
+type DeleteTemplateHandler struct {
+	repo template.Repository
+}
+
+func NewDeleteTemplateHandler(repo template.Repository) DeleteTemplateHandler {
+	return DeleteTemplateHandler{
+		repo: repo,
+	}
+}
+
+func (dt DeleteTemplateHandler) Handle(ctx context.Context, cmd DeleteTemplate) error {
+	return dt.repo.DeleteByUUID(ctx, cmd.UUID)
 }

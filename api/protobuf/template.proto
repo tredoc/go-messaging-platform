@@ -3,10 +3,11 @@ syntax = "proto3";
 package template;
 
 import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "https://github.com/tredoc/go-messaging-platform/pb";
 
-enum TemplateType {
+enum TmplType {
   SMS = 0;
   EMAIL = 1;
 }
@@ -25,6 +26,8 @@ service TemplateService {
     };
   }
 
+  rpc EnrichTemplate(EnrichTemplateRequest) returns (EnrichTemplateResponse) {}
+
   rpc DeleteTemplate(DeleteTemplateRequest) returns (DeleteTemplateResponse) {
     option (google.api.http) = {
       delete: "/templates/{uuid}"
@@ -33,13 +36,12 @@ service TemplateService {
 }
 
 message CreateTemplateRequest {
-  string template = 1;
-  TemplateType type = 2;
+  string content = 1;
+  TmplType type = 2;
 }
 
 message CreateTemplateResponse {
   string uuid = 1;
-  string status = 2;
 }
 
 message GetTemplateRequest {
@@ -48,8 +50,18 @@ message GetTemplateRequest {
 
 message GetTemplateResponse {
   string uuid = 1;
-  string template = 2;
-  TemplateType type = 3;
+  string content = 2;
+  TmplType type = 3;
+  google.protobuf.Timestamp created_at = 4;
+}
+
+message EnrichTemplateRequest {
+  string uuid = 1;
+  string message = 2;
+}
+
+message EnrichTemplateResponse {
+  string message = 1;
 }
 
 message DeleteTemplateRequest {

@@ -2,18 +2,32 @@ package command
 
 import (
 	"context"
-	"log"
+	"github.com/tredoc/go-messaging-platform/template/internal/domain/template"
+	"time"
 )
 
-type CreateTemplate struct{}
-
-type CreateTemplateHandler struct{}
-
-func NewCreateTemplateHandler() CreateTemplateHandler {
-	return CreateTemplateHandler{}
+type CreateTemplate struct {
+	UUID      string
+	Content   string
+	TmplType  template.TmplType
+	CreatedAt time.Time
 }
 
-func (ct CreateTemplateHandler) Handle(_ context.Context, _ CreateTemplate) error {
-	log.Println("Create template command invoked")
-	return nil
+type CreateTemplateHandler struct {
+	repo template.Repository
+}
+
+func NewCreateTemplateHandler(repo template.Repository) CreateTemplateHandler {
+	return CreateTemplateHandler{
+		repo: repo,
+	}
+}
+
+func (ct CreateTemplateHandler) Handle(ctx context.Context, cmd CreateTemplate) error {
+	t, err := template.NewTemplate(cmd.UUID, cmd.Content, cmd.TmplType, cmd.CreatedAt)
+	if err != nil {
+		return err
+	}
+
+	return ct.repo.Save(ctx, t)
 }

@@ -6,7 +6,7 @@ import "google/api/annotations.proto";
 
 option go_package = "https://github.com/tredoc/go-messaging-platform/pb";
 
-enum MessageStatus {
+enum MsgStatus {
     NEW = 0;
     SENDING = 1;
     COMPLETED = 2;
@@ -26,5 +26,5 @@ message GetMessageStatusRequest {
 }
 
 message GetMessageStatusResponse {
-    MessageStatus status = 1;
+    MsgStatus status = 1;
 }

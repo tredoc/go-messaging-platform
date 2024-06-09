@@ -22,5 +22,5 @@ func (gh GRPCMessageHandler) GetMessageStatus(ctx context.Context, req *pb.GetMe
 
 	_ = gh.app.Queries.GetMessageStatus.Handle(ctx, query.GetMessageStatus{})
 
-	return &pb.GetMessageStatusResponse{Status: pb.MessageStatus_NEW}, nil
+	return &pb.GetMessageStatusResponse{Status: pb.MsgStatus_NEW}, nil
 }

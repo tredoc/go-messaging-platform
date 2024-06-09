@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	TemplateService_CreateTemplate_FullMethodName = "/template.TemplateService/CreateTemplate"
 	TemplateService_GetTemplate_FullMethodName    = "/template.TemplateService/GetTemplate"
+	TemplateService_EnrichTemplate_FullMethodName = "/template.TemplateService/EnrichTemplate"
 	TemplateService_DeleteTemplate_FullMethodName = "/template.TemplateService/DeleteTemplate"
 )
 
@@ -30,6 +31,7 @@ const (
 type TemplateServiceClient interface {
 	CreateTemplate(ctx context.Context, in *CreateTemplateRequest, opts ...grpc.CallOption) (*CreateTemplateResponse, error)
 	GetTemplate(ctx context.Context, in *GetTemplateRequest, opts ...grpc.CallOption) (*GetTemplateResponse, error)
+	EnrichTemplate(ctx context.Context, in *EnrichTemplateRequest, opts ...grpc.CallOption) (*EnrichTemplateResponse, error)
 	DeleteTemplate(ctx context.Context, in *DeleteTemplateRequest, opts ...grpc.CallOption) (*DeleteTemplateResponse, error)
 }
 
@@ -59,6 +61,15 @@ func (c *templateServiceClient) GetTemplate(ctx context.Context, in *GetTemplate
 	return out, nil
 }
 
+func (c *templateServiceClient) EnrichTemplate(ctx context.Context, in *EnrichTemplateRequest, opts ...grpc.CallOption) (*EnrichTemplateResponse, error) {
+	out := new(EnrichTemplateResponse)
+	err := c.cc.Invoke(ctx, TemplateService_EnrichTemplate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *templateServiceClient) DeleteTemplate(ctx context.Context, in *DeleteTemplateRequest, opts ...grpc.CallOption) (*DeleteTemplateResponse, error) {
 	out := new(DeleteTemplateResponse)
 	err := c.cc.Invoke(ctx, TemplateService_DeleteTemplate_FullMethodName, in, out, opts...)
@@ -74,6 +85,7 @@ func (c *templateServiceClient) DeleteTemplate(ctx context.Context, in *DeleteTe
 type TemplateServiceServer interface {
 	CreateTemplate(context.Context, *CreateTemplateRequest) (*CreateTemplateResponse, error)
 	GetTemplate(context.Context, *GetTemplateRequest) (*GetTemplateResponse, error)
+	EnrichTemplate(context.Context, *EnrichTemplateRequest) (*EnrichTemplateResponse, error)
 	DeleteTemplate(context.Context, *DeleteTemplateRequest) (*DeleteTemplateResponse, error)
 }
 
@@ -86,6 +98,9 @@ func (UnimplementedTemplateServiceServer) CreateTemplate(context.Context, *Creat
 }
 func (UnimplementedTemplateServiceServer) GetTemplate(context.Context, *GetTemplateRequest) (*GetTemplateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTemplate not implemented")
+}
+func (UnimplementedTemplateServiceServer) EnrichTemplate(context.Context, *EnrichTemplateRequest) (*EnrichTemplateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EnrichTemplate not implemented")
 }
 func (UnimplementedTemplateServiceServer) DeleteTemplate(context.Context, *DeleteTemplateRequest) (*DeleteTemplateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteTemplate not implemented")
@@ -138,6 +153,24 @@ func _TemplateService_GetTemplate_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TemplateService_EnrichTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EnrichTemplateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TemplateServiceServer).EnrichTemplate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TemplateService_EnrichTemplate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TemplateServiceServer).EnrichTemplate(ctx, req.(*EnrichTemplateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _TemplateService_DeleteTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteTemplateRequest)
 	if err := dec(in); err != nil {
@@ -170,6 +203,10 @@ var TemplateService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetTemplate",
 			Handler:    _TemplateService_GetTemplate_Handler,
+		},
+		{
+			MethodName: "EnrichTemplate",
+			Handler:    _TemplateService_EnrichTemplate_Handler,
 		},
 		{
 			MethodName: "DeleteTemplate",

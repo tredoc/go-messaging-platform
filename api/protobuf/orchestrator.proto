@@ -6,7 +6,7 @@ import "google/api/annotations.proto";
 
 option go_package = "https://github.com/tredoc/go-messaging-platform/pb";
 
-enum MessageType {
+enum MsgType {
     SMS = 0;
     EMAIL = 1;
 }
@@ -28,7 +28,7 @@ service OrchestratorService {
 message SendMessageRequest {
     string message = 1;
     string template_uuid = 2;
-    MessageType type = 3;
+    MsgType type = 3;
     string sender = 4;
     string receiver = 5;
 }

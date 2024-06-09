@@ -2,9 +2,15 @@ package server
 
 import (
 	"context"
+	guuid "github.com/google/uuid"
 	"github.com/tredoc/go-messaging-platform/template/internal/command"
+	"github.com/tredoc/go-messaging-platform/template/internal/domain/template"
 	"github.com/tredoc/go-messaging-platform/template/internal/query"
 	"github.com/tredoc/go-messaging-platform/template/pb"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
+	"time"
 )
 
 type GRPCHandler struct {
@@ -19,26 +25,65 @@ func NewGRPCHandler(c command.Command, q query.Query) GRPCHandler {
 	}
 }
 
-func (gs GRPCHandler) CreateTemplate(_ context.Context, req *pb.CreateTemplateRequest) (*pb.CreateTemplateResponse, error) {
-	_ = req.GetType()
+func (gs GRPCHandler) CreateTemplate(ctx context.Context, req *pb.CreateTemplateRequest) (*pb.CreateTemplateResponse, error) {
+	content := req.GetContent()
+	tmplType := req.GetType()
 
-	_ = gs.command.CreateTemplate.Handle(context.TODO(), command.CreateTemplate{})
+	t, err := template.NewTemplate(guuid.New().String(), content, template.TmplType(tmplType), time.Now())
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+	}
 
-	return &pb.CreateTemplateResponse{Uuid: "New UUID", Status: "created"}, nil
+	err = t.Validate()
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+	}
+
+	err = gs.command.CreateTemplate.Handle(ctx, command.CreateTemplate{
+		UUID:      t.UUID(),
+		Content:   t.Content(),
+		TmplType:  t.TmplType(),
+		CreatedAt: t.CreatedAt(),
+	})
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+	}
+
+	return &pb.CreateTemplateResponse{Uuid: t.UUID()}, nil
 }
 
-func (gs GRPCHandler) GetTemplate(_ context.Context, req *pb.GetTemplateRequest) (*pb.GetTemplateResponse, error) {
+func (gs GRPCHandler) GetTemplate(ctx context.Context, req *pb.GetTemplateRequest) (*pb.GetTemplateResponse, error) {
 	uuid := req.GetUuid()
 
-	_ = gs.query.GetTemplate.Handle(context.TODO(), query.GetTemplate{})
+	t, err := gs.query.GetTemplate.Handle(ctx, query.GetTemplate{UUID: uuid})
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+	}
 
-	return &pb.GetTemplateResponse{Uuid: uuid, Template: "Random template string", Type: pb.TemplateType_EMAIL}, nil
+	return &pb.GetTemplateResponse{Uuid: t.UUID(), Content: t.Content(), Type: pb.TmplType(t.TmplType()), CreatedAt: timestamppb.New(t.CreatedAt())}, nil
 }
 
-func (gs GRPCHandler) DeleteTemplate(_ context.Context, req *pb.DeleteTemplateRequest) (*pb.DeleteTemplateResponse, error) {
+func (gs GRPCHandler) EnrichTemplate(ctx context.Context, req *pb.EnrichTemplateRequest) (*pb.EnrichTemplateResponse, error) {
+	uuid := req.GetUuid()
+	message := req.GetMessage()
+
+	tmpl, err := gs.query.GetTemplate.Handle(ctx, query.GetTemplate{UUID: uuid})
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+	}
+
+	msg := tmpl.Enrich(message)
+
+	return &pb.EnrichTemplateResponse{Message: msg}, nil
+}
+
+func (gs GRPCHandler) DeleteTemplate(ctx context.Context, req *pb.DeleteTemplateRequest) (*pb.DeleteTemplateResponse, error) {
 	uuid := req.GetUuid()
 
-	_ = gs.command.DeleteTemplate.Handle(context.TODO(), command.DeleteTemplate{})
+	err := gs.command.DeleteTemplate.Handle(ctx, command.DeleteTemplate{UUID: uuid})
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+	}
 
-	return &pb.DeleteTemplateResponse{Status: "deleted id: " + uuid}, nil
+	return &pb.DeleteTemplateResponse{Status: "deleted uuid: " + uuid}, nil
 }

@@ -41,6 +41,20 @@ services:
     volumes:
       - ./message:/app
 
+
+  template-mongo:
+    container_name: "msg-template-mongo"
+    image: mongo:7.0.9
+    environment:
+        MONGO_INITDB_ROOT_USERNAME: ${TEMPLATE_MONGO_USER}
+        MONGO_INITDB_ROOT_PASSWORD: ${TEMPLATE_MONGO_PASS}
+    ports:
+      - "${TEMPLATE_MONGO_PORT}:${TEMPLATE_MONGO_PORT}"
+    networks:
+      - app-network
+    volumes:
+      - template-mongo-data:/data/db
+
   template:
     container_name: "msg-template"
     build:
@@ -52,8 +66,13 @@ services:
       - "${TEMPLATE_PORT}:${TEMPLATE_PORT}"
     networks:
       - app-network
+    depends_on:
+      - template-mongo
     volumes:
       - ./template:/app
+
+volumes:
+  template-mongo-data:
 
 networks:
   app-network:
