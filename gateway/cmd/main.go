@@ -5,6 +5,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/tredoc/go-messaging-platform/gateway/internal/config"
 	"github.com/tredoc/go-messaging-platform/gateway/internal/server"
+	"google.golang.org/protobuf/encoding/protojson"
 	"log"
 )
 
@@ -18,7 +19,12 @@ func main() {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	mux := runtime.NewServeMux()
+	mux := runtime.NewServeMux(runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{
+		MarshalOptions: protojson.MarshalOptions{
+			UseProtoNames:   true,
+			EmitUnpopulated: true,
+		},
+	}))
 
 	err = server.Run(ctx, cfg, mux)
 	if err != nil {
