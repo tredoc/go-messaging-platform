@@ -27,6 +27,19 @@ services:
     volumes:
       - ./orchestrator:/app
 
+  message-mongo:
+    container_name: "msg-message-mongo"
+    image: mongo:7.0.9
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MESSAGE_MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MESSAGE_MONGO_PASS}
+    ports:
+      - "${MESSAGE_MONGO_PORT}:${MESSAGE_MONGO_PORT}"
+    networks:
+      - app-network
+    volumes:
+      - message-mongo-data:/data/db
+
   message:
     container_name: "msg-message"
     build:
@@ -38,6 +51,8 @@ services:
       - "${MESSAGE_PORT}:${MESSAGE_PORT}"
     networks:
       - app-network
+    depends_on:
+      - message-mongo
     volumes:
       - ./message:/app
 
@@ -73,6 +88,7 @@ services:
 
 volumes:
   template-mongo-data:
+  message-mongo-data:
 
 networks:
   app-network:

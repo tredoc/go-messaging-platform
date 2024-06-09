@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/tredoc/go-messaging-platform/message/internal/application"
 	"github.com/tredoc/go-messaging-platform/message/internal/config"
-	"github.com/tredoc/go-messaging-platform/message/internal/handler"
+	"github.com/tredoc/go-messaging-platform/message/internal/query"
+	"github.com/tredoc/go-messaging-platform/message/internal/repository"
 	"github.com/tredoc/go-messaging-platform/message/internal/server"
 	"log"
 )
@@ -19,11 +19,17 @@ func main() {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	app := application.New()
-	grpcHandler := handler.NewGRPCMessageHandler(app)
-	GRPCServer := server.NewGRPCServer(grpcHandler)
+	mng, err := repository.RunMongo(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	err = server.Run(ctx, GRPCServer, cfg)
+	repo := repository.NewMessageRepository(mng)
+
+	queries := query.NewQuery(repo)
+	handler := server.NewGRPCHandler(queries)
+
+	err = server.Run(ctx, cfg, handler)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -10,7 +10,7 @@ import (
 	"net"
 )
 
-func Run(_ context.Context, grpcSrv pb.MessageServiceServer, cfg config.Config) error {
+func Run(_ context.Context, cfg config.Config, grpcHandler GRPCHandler) error {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", cfg.Port))
 	if err != nil {
 		return fmt.Errorf("failed to listen on port %s: %w", cfg.Port, err)
@@ -18,7 +18,7 @@ func Run(_ context.Context, grpcSrv pb.MessageServiceServer, cfg config.Config) 
 
 	var opts []grpc.ServerOption
 	grpcServer := grpc.NewServer(opts...)
-	pb.RegisterMessageServiceServer(grpcServer, grpcSrv)
+	pb.RegisterMessageServiceServer(grpcServer, grpcHandler)
 
 	log.Printf("Starting message server on port: %s\n", cfg.Port)
 
