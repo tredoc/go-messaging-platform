@@ -13,3 +13,8 @@ protoc \
   "--go-grpc_out=$service/pb" --go-grpc_opt=paths=source_relative
 
 cp -r $service/pb/* gateway/pb
+
+if [ "$service" != "orchestrator" ]
+then
+  cp -r $service/pb/* orchestrator/pb
+fi

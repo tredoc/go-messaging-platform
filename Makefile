@@ -11,8 +11,8 @@ proto/gateway:
 	@./scripts/gateway.sh gateway
 
 proto/all:
-	@make proto/message
 	@make proto/orchestrator
+	@make proto/message
 	@make proto/template
 	@make proto/gateway
 
