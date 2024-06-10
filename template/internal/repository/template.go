@@ -19,7 +19,7 @@ type TemplateRepository struct {
 }
 
 type TemplateDocument struct {
-	UUID      string            `bson:"uuid"`
+	UUID      string            `bson:"_id"`
 	Content   string            `bson:"content"`
 	TmplType  template.TmplType `bson:"type"`
 	CreatedAt time.Time         `bson:"created_at"`
@@ -47,7 +47,7 @@ func (r *TemplateRepository) Save(ctx context.Context, t *template.Template) err
 func (r *TemplateRepository) FindByUUID(ctx context.Context, uuid string) (*template.Template, error) {
 	var tmpl TemplateDocument
 
-	filter := bson.D{{"uuid", uuid}}
+	filter := bson.D{{"_id", uuid}}
 	err := r.coll.FindOne(ctx, filter).Decode(&tmpl)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
@@ -60,7 +60,7 @@ func (r *TemplateRepository) FindByUUID(ctx context.Context, uuid string) (*temp
 }
 
 func (r *TemplateRepository) DeleteByUUID(ctx context.Context, uuid string) error {
-	filter := bson.D{{"uuid", uuid}}
+	filter := bson.D{{"_id", uuid}}
 	_, err := r.coll.DeleteOne(ctx, filter)
 	if err != nil {
 		return err
