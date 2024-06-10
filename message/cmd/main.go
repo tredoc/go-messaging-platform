@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/tredoc/go-messaging-platform/message/internal/command"
 	"github.com/tredoc/go-messaging-platform/message/internal/config"
 	"github.com/tredoc/go-messaging-platform/message/internal/query"
 	"github.com/tredoc/go-messaging-platform/message/internal/repository"
@@ -24,10 +25,16 @@ func main() {
 		log.Fatal(err)
 	}
 
-	repo := repository.NewMessageRepository(mng)
+	msgRepo := repository.NewMessageRepository(mng)
+	stsRepo := repository.NewStatusRepository(mng)
 
-	queries := query.NewQuery(repo)
-	handler := server.NewGRPCHandler(queries)
+	msgQueries := query.NewMessageQuery(msgRepo)
+	msgCommands := command.NewMessageCommand(msgRepo)
+
+	stsQueries := query.NewStatusQuery(stsRepo)
+	stsCommands := command.NewStatusCommand(stsRepo)
+
+	handler := server.NewGRPCHandler(msgQueries, msgCommands, stsQueries, stsCommands)
 
 	err = server.Run(ctx, cfg, handler)
 	if err != nil {

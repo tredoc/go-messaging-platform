@@ -3,6 +3,7 @@ syntax = "proto3";
 package message;
 
 import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "https://github.com/tredoc/go-messaging-platform/pb";
 
@@ -14,17 +15,58 @@ enum MsgStatus {
 }
 
 service MessageService {
-    rpc GetMessageStatus(GetMessageStatusRequest) returns (GetMessageStatusResponse) {
+    rpc SaveMessage(SaveMessageRequest) returns (SaveMessageResponse) {
+        option (google.api.http) = {
+            post: "/messages"
+            body: "*"
+        };
+    }
+    rpc GetMessageStatusByMessageUUID(GetMessageStatusByMessageUUIDRequest) returns (GetMessageStatusByMessageUUIDResponse) {
+        option (google.api.http) = {
+            get: "/messages/{uuid}/status"
+        };
+    }
+
+    rpc GetMessageByUUID(GetMessageByUUIDRequest) returns (GetMessageByUUIDResponse) {
         option (google.api.http) = {
             get: "/messages/{uuid}"
         };
     }
 }
 
-message GetMessageStatusRequest {
+message SaveMessageRequest {
+    string message = 1;
+    string template_uuid = 2;
+    string sender = 3;
+    string receiver = 4;
+}
+
+message SaveMessageResponse {
     string uuid = 1;
 }
 
-message GetMessageStatusResponse {
-    MsgStatus status = 1;
+message GetMessageStatusByMessageUUIDRequest {
+    string uuid = 1;
+}
+
+message GetMessageStatusByMessageUUIDResponse {
+    string uuid = 1;
+    MsgStatus status = 2;
+    string message_uuid = 3;
+    google.protobuf.Timestamp created_at = 4;
+}
+
+message GetMessageByUUIDRequest {
+    string uuid = 1;
+}
+
+message GetMessageByUUIDResponse {
+    string uuid = 1;
+    string message = 2;
+    string template_uuid = 3;
+    string sender = 4;
+    string receiver = 5;
+    MsgStatus status = 6;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
 }

@@ -1,5 +1,8 @@
 package message
 
+import "context"
+
 type Repository interface {
-	FindMessageStatusByUUID(string) (string, error)
+	SaveMessage(context.Context, Message) error
+	FindMessageByUUID(context.Context, string) (Message, error)
 }

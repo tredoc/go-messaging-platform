@@ -2,8 +2,9 @@ package query
 
 import (
 	"context"
-	"github.com/tredoc/go-messaging-platform/message/internal/domain/message"
-	"log"
+	"errors"
+	"github.com/tredoc/go-messaging-platform/message/internal/domain/status"
+	"github.com/tredoc/go-messaging-platform/message/internal/repository"
 )
 
 type GetMessageStatus struct {
@@ -11,16 +12,24 @@ type GetMessageStatus struct {
 }
 
 type GetMessageStatusHandler struct {
-	repo message.Repository
+	repo status.Repository
 }
 
-func NewGetMessageStatusHandler(repo message.Repository) GetMessageStatusHandler {
+func NewGetMessageStatusHandler(repo status.Repository) GetMessageStatusHandler {
 	return GetMessageStatusHandler{
 		repo: repo,
 	}
 }
 
-func (gh GetMessageStatusHandler) Handle(_ context.Context, _ GetMessageStatus) error {
-	log.Println("Get message status query invoked")
-	return nil
+func (gh GetMessageStatusHandler) Handle(ctx context.Context, q GetMessageStatus) (status.Status, error) {
+	sts, err := gh.repo.FindStatusByUUID(ctx, q.UUID)
+	if err != nil {
+		if errors.Is(err, repository.ErrNotFound) {
+			return status.Status{}, repository.ErrNotFound
+		}
+
+		return status.Status{}, err
+	}
+
+	return sts, nil
 }

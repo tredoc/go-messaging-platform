@@ -1,11 +1,26 @@
 package query
 
-import "github.com/tredoc/go-messaging-platform/message/internal/domain/message"
+import (
+	"github.com/tredoc/go-messaging-platform/message/internal/domain/message"
+	"github.com/tredoc/go-messaging-platform/message/internal/domain/status"
+)
 
-type Query struct {
+type MessageQuery struct {
+	GetMessage GetMessageHandler
+}
+
+func NewMessageQuery(repo message.Repository) MessageQuery {
+	return MessageQuery{
+		GetMessage: NewGetMessageHandler(repo),
+	}
+}
+
+type StatusQuery struct {
 	GetMessageStatus GetMessageStatusHandler
 }
 
-func NewQuery(repo message.Repository) Query {
-	return Query{GetMessageStatus: NewGetMessageStatusHandler(repo)}
+func NewStatusQuery(repo status.Repository) StatusQuery {
+	return StatusQuery{
+		GetMessageStatus: NewGetMessageStatusHandler(repo),
+	}
 }

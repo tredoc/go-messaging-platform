@@ -19,14 +19,18 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	MessageService_GetMessageStatus_FullMethodName = "/message.MessageService/GetMessageStatus"
+	MessageService_SaveMessage_FullMethodName                   = "/message.MessageService/SaveMessage"
+	MessageService_GetMessageStatusByMessageUUID_FullMethodName = "/message.MessageService/GetMessageStatusByMessageUUID"
+	MessageService_GetMessageByUUID_FullMethodName              = "/message.MessageService/GetMessageByUUID"
 )
 
 // MessageServiceClient is the client API for MessageService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MessageServiceClient interface {
-	GetMessageStatus(ctx context.Context, in *GetMessageStatusRequest, opts ...grpc.CallOption) (*GetMessageStatusResponse, error)
+	SaveMessage(ctx context.Context, in *SaveMessageRequest, opts ...grpc.CallOption) (*SaveMessageResponse, error)
+	GetMessageStatusByMessageUUID(ctx context.Context, in *GetMessageStatusByMessageUUIDRequest, opts ...grpc.CallOption) (*GetMessageStatusByMessageUUIDResponse, error)
+	GetMessageByUUID(ctx context.Context, in *GetMessageByUUIDRequest, opts ...grpc.CallOption) (*GetMessageByUUIDResponse, error)
 }
 
 type messageServiceClient struct {
@@ -37,9 +41,27 @@ func NewMessageServiceClient(cc grpc.ClientConnInterface) MessageServiceClient {
 	return &messageServiceClient{cc}
 }
 
-func (c *messageServiceClient) GetMessageStatus(ctx context.Context, in *GetMessageStatusRequest, opts ...grpc.CallOption) (*GetMessageStatusResponse, error) {
-	out := new(GetMessageStatusResponse)
-	err := c.cc.Invoke(ctx, MessageService_GetMessageStatus_FullMethodName, in, out, opts...)
+func (c *messageServiceClient) SaveMessage(ctx context.Context, in *SaveMessageRequest, opts ...grpc.CallOption) (*SaveMessageResponse, error) {
+	out := new(SaveMessageResponse)
+	err := c.cc.Invoke(ctx, MessageService_SaveMessage_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *messageServiceClient) GetMessageStatusByMessageUUID(ctx context.Context, in *GetMessageStatusByMessageUUIDRequest, opts ...grpc.CallOption) (*GetMessageStatusByMessageUUIDResponse, error) {
+	out := new(GetMessageStatusByMessageUUIDResponse)
+	err := c.cc.Invoke(ctx, MessageService_GetMessageStatusByMessageUUID_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *messageServiceClient) GetMessageByUUID(ctx context.Context, in *GetMessageByUUIDRequest, opts ...grpc.CallOption) (*GetMessageByUUIDResponse, error) {
+	out := new(GetMessageByUUIDResponse)
+	err := c.cc.Invoke(ctx, MessageService_GetMessageByUUID_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -50,15 +72,23 @@ func (c *messageServiceClient) GetMessageStatus(ctx context.Context, in *GetMess
 // All implementations should embed UnimplementedMessageServiceServer
 // for forward compatibility
 type MessageServiceServer interface {
-	GetMessageStatus(context.Context, *GetMessageStatusRequest) (*GetMessageStatusResponse, error)
+	SaveMessage(context.Context, *SaveMessageRequest) (*SaveMessageResponse, error)
+	GetMessageStatusByMessageUUID(context.Context, *GetMessageStatusByMessageUUIDRequest) (*GetMessageStatusByMessageUUIDResponse, error)
+	GetMessageByUUID(context.Context, *GetMessageByUUIDRequest) (*GetMessageByUUIDResponse, error)
 }
 
 // UnimplementedMessageServiceServer should be embedded to have forward compatible implementations.
 type UnimplementedMessageServiceServer struct {
 }
 
-func (UnimplementedMessageServiceServer) GetMessageStatus(context.Context, *GetMessageStatusRequest) (*GetMessageStatusResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetMessageStatus not implemented")
+func (UnimplementedMessageServiceServer) SaveMessage(context.Context, *SaveMessageRequest) (*SaveMessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SaveMessage not implemented")
+}
+func (UnimplementedMessageServiceServer) GetMessageStatusByMessageUUID(context.Context, *GetMessageStatusByMessageUUIDRequest) (*GetMessageStatusByMessageUUIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMessageStatusByMessageUUID not implemented")
+}
+func (UnimplementedMessageServiceServer) GetMessageByUUID(context.Context, *GetMessageByUUIDRequest) (*GetMessageByUUIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMessageByUUID not implemented")
 }
 
 // UnsafeMessageServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -72,20 +102,56 @@ func RegisterMessageServiceServer(s grpc.ServiceRegistrar, srv MessageServiceSer
 	s.RegisterService(&MessageService_ServiceDesc, srv)
 }
 
-func _MessageService_GetMessageStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMessageStatusRequest)
+func _MessageService_SaveMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SaveMessageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessageServiceServer).GetMessageStatus(ctx, in)
+		return srv.(MessageServiceServer).SaveMessage(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MessageService_GetMessageStatus_FullMethodName,
+		FullMethod: MessageService_SaveMessage_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).GetMessageStatus(ctx, req.(*GetMessageStatusRequest))
+		return srv.(MessageServiceServer).SaveMessage(ctx, req.(*SaveMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MessageService_GetMessageStatusByMessageUUID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMessageStatusByMessageUUIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MessageServiceServer).GetMessageStatusByMessageUUID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MessageService_GetMessageStatusByMessageUUID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MessageServiceServer).GetMessageStatusByMessageUUID(ctx, req.(*GetMessageStatusByMessageUUIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MessageService_GetMessageByUUID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMessageByUUIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MessageServiceServer).GetMessageByUUID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MessageService_GetMessageByUUID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MessageServiceServer).GetMessageByUUID(ctx, req.(*GetMessageByUUIDRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -98,8 +164,16 @@ var MessageService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*MessageServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetMessageStatus",
-			Handler:    _MessageService_GetMessageStatus_Handler,
+			MethodName: "SaveMessage",
+			Handler:    _MessageService_SaveMessage_Handler,
+		},
+		{
+			MethodName: "GetMessageStatusByMessageUUID",
+			Handler:    _MessageService_GetMessageStatusByMessageUUID_Handler,
+		},
+		{
+			MethodName: "GetMessageByUUID",
+			Handler:    _MessageService_GetMessageByUUID_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

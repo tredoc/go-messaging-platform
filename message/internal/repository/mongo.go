@@ -8,6 +8,8 @@ import (
 	"log"
 )
 
+const messageDB = "message"
+
 func RunMongo(cfg config.Config) (*mongo.Client, error) {
 	clientOptions := options.Client().ApplyURI(cfg.MongoURI)
 	client, err := mongo.Connect(context.TODO(), clientOptions)

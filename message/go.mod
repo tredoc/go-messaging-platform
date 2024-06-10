@@ -3,6 +3,7 @@ module github.com/tredoc/go-messaging-platform/message
 go 1.22.0
 
 require (
+	github.com/google/uuid v1.6.0
 	go.mongodb.org/mongo-driver v1.15.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20240521202816-d264139d666e
 	google.golang.org/grpc v1.64.0
