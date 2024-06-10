@@ -15,12 +15,7 @@ enum MsgStatus {
 }
 
 service MessageService {
-    rpc SaveMessage(SaveMessageRequest) returns (SaveMessageResponse) {
-        option (google.api.http) = {
-            post: "/messages"
-            body: "*"
-        };
-    }
+    rpc SaveMessage(SaveMessageRequest) returns (SaveMessageResponse) {}
     rpc GetMessageStatusByMessageUUID(GetMessageStatusByMessageUUIDRequest) returns (GetMessageStatusByMessageUUIDResponse) {
         option (google.api.http) = {
             get: "/messages/{uuid}/status"
@@ -43,6 +38,7 @@ message SaveMessageRequest {
 
 message SaveMessageResponse {
     string uuid = 1;
+    google.protobuf.Timestamp created_at = 2;
 }
 
 message GetMessageStatusByMessageUUIDRequest {

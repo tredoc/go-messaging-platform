@@ -3,6 +3,7 @@ syntax = "proto3";
 package orchestrator;
 
 import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "https://github.com/tredoc/go-messaging-platform/pb";
 
@@ -12,7 +13,7 @@ enum MsgType {
 }
 
 enum OrchestratorMessageStatus {
-    CREATED = 0;
+    NEW = 0;
     FAILED = 1;
 }
 
@@ -34,5 +35,7 @@ message SendMessageRequest {
 }
 
 message SendMessageResponse {
-    OrchestratorMessageStatus status = 1;
+    string uuid = 1;
+    OrchestratorMessageStatus status = 2;
+    google.protobuf.Timestamp created_at = 3;
 }

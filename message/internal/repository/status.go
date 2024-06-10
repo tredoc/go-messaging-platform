@@ -26,7 +26,7 @@ func NewStatusRepository(db *mongo.Client) *StatusRepository {
 		coll: db.Database(messageDB).Collection(statusCollection)}
 }
 
-func (r StatusRepository) SaveStatus(ctx context.Context, s status.Status) error {
+func (r StatusRepository) SaveStatus(_ context.Context, _ status.Status) error {
 	return nil
 }
 
@@ -36,7 +36,7 @@ func (r StatusRepository) FindStatusByUUID(ctx context.Context, uuid string) (st
 	filter := bson.D{{"_id", uuid}}
 	err := r.coll.FindOne(ctx, filter).Decode(&s)
 	if err != nil {
-		return status.Status{}, ErrNotFound
+		return status.Status{}, ErrStatusNotFound
 	}
 
 	return status.UnmarshalFromDB(s.UUID, s.Status, s.MessageUUID, s.CreatedAt)
@@ -48,7 +48,7 @@ func (r StatusRepository) FindStatusByMessageUUID(ctx context.Context, uuid stri
 	filter := bson.D{{"message_uuid", uuid}}
 	err := r.coll.FindOne(ctx, filter).Decode(&s)
 	if err != nil {
-		return status.Status{}, ErrNotFound
+		return status.Status{}, ErrStatusNotFound
 	}
 
 	return status.UnmarshalFromDB(s.UUID, s.Status, s.MessageUUID, s.CreatedAt)

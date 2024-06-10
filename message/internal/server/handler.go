@@ -54,7 +54,7 @@ func (gh GRPCHandler) SaveMessage(ctx context.Context, req *pb.SaveMessageReques
 		return nil, err
 	}
 
-	return &pb.SaveMessageResponse{Uuid: dm.UUID()}, nil
+	return &pb.SaveMessageResponse{Uuid: dm.UUID(), CreatedAt: timestamppb.New(dm.CreatedAt())}, nil
 }
 
 func (gh GRPCHandler) GetMessageByUUID(ctx context.Context, req *pb.GetMessageByUUIDRequest) (*pb.GetMessageByUUIDResponse, error) {
@@ -75,7 +75,7 @@ func (gh GRPCHandler) GetMessageByUUID(ctx context.Context, req *pb.GetMessageBy
 
 	msgStatus, err := gh.statusQuery.GetMessageStatus.Handle(ctx, query.GetMessageStatus{UUID: uuid})
 	if err != nil {
-		if errors.Is(err, repository.ErrNotFound) {
+		if errors.Is(err, repository.ErrStatusNotFound) {
 			resp.CreatedAt = timestamppb.New(msg.CreatedAt())
 			resp.Status = pb.MsgStatus_NEW
 			resp.UpdatedAt = timestamppb.New(msg.CreatedAt())

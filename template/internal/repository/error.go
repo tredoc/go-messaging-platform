@@ -3,5 +3,5 @@ package repository
 import "errors"
 
 var (
-	ErrNotFound = errors.New("not found")
+	ErrNotFound = errors.New("template not found")
 )

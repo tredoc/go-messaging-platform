@@ -50,9 +50,10 @@ func (r MessageRepository) FindMessageByUUID(ctx context.Context, uuid string) (
 	err := r.coll.FindOne(ctx, filter).Decode(&msg)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
-			return message.Message{}, ErrNotFound
+			return message.Message{}, ErrMsgNotFound
 		}
-		return message.Message{}, ErrNotFound
+
+		return message.Message{}, err
 	}
 
 	return message.UnmarshalFromDB(msg.UUID, msg.Message, msg.TemplateUUID, msg.Sender, msg.Receiver, msg.CreatedAt)

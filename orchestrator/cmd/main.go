@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
+	"github.com/tredoc/go-messaging-platform/orchestrator/internal/client"
 	"github.com/tredoc/go-messaging-platform/orchestrator/internal/config"
-	"github.com/tredoc/go-messaging-platform/orchestrator/internal/handler"
 	"github.com/tredoc/go-messaging-platform/orchestrator/internal/server"
 	"log"
 )
@@ -18,10 +18,19 @@ func main() {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	grpcHandler := handler.NewGRPCOrchestratorHandler()
-	GRPCServer := server.NewGRPCServer(grpcHandler)
+	msgClient, err := client.RunMessageClient(ctx, cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	err = server.Run(ctx, GRPCServer, cfg)
+	templateClient, err := client.RunTemplateClient(ctx, cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	grpcHandler := server.NewGRPCHandler(msgClient, templateClient)
+
+	err = server.Run(ctx, cfg, grpcHandler)
 	if err != nil {
 		log.Fatal(err)
 	}

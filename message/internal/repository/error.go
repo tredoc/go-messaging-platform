@@ -3,5 +3,6 @@ package repository
 import "errors"
 
 var (
-	ErrNotFound = errors.New("not found")
+	ErrMsgNotFound    = errors.New("message not found")
+	ErrStatusNotFound = errors.New("status not found")
 )

@@ -67,6 +67,14 @@ func (gs GRPCHandler) EnrichTemplate(ctx context.Context, req *pb.EnrichTemplate
 	uuid := req.GetUuid()
 	message := req.GetMessage()
 
+	if uuid == "" {
+		return nil, status.Errorf(codes.InvalidArgument, "uuid of template is required")
+	}
+
+	if message == "" {
+		return nil, status.Errorf(codes.InvalidArgument, "message is required and cannot be empty")
+	}
+
 	tmpl, err := gs.query.GetTemplate.Handle(ctx, query.GetTemplate{UUID: uuid})
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, err.Error())

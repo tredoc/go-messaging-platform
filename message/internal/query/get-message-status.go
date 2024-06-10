@@ -24,8 +24,8 @@ func NewGetMessageStatusHandler(repo status.Repository) GetMessageStatusHandler 
 func (gh GetMessageStatusHandler) Handle(ctx context.Context, q GetMessageStatus) (status.Status, error) {
 	sts, err := gh.repo.FindStatusByUUID(ctx, q.UUID)
 	if err != nil {
-		if errors.Is(err, repository.ErrNotFound) {
-			return status.Status{}, repository.ErrNotFound
+		if errors.Is(err, repository.ErrMsgNotFound) {
+			return status.Status{}, repository.ErrMsgNotFound
 		}
 
 		return status.Status{}, err
