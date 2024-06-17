@@ -9,7 +9,7 @@ import (
 type CreateTemplate struct {
 	UUID      string
 	Content   string
-	TmplType  template.TmplType
+	TmplType  template.TemplateType
 	CreatedAt time.Time
 }
 

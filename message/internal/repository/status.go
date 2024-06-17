@@ -15,10 +15,10 @@ type StatusRepository struct {
 }
 
 type StatusDocument struct {
-	UUID        string           `bson:"_id"`
-	MessageUUID string           `bson:"message_uuid"`
-	Status      status.MsgStatus `bson:"status"`
-	CreatedAt   time.Time        `bson:"created_at"`
+	UUID        string               `bson:"_id"`
+	MessageUUID string               `bson:"message_uuid"`
+	Status      status.MessageStatus `bson:"status"`
+	CreatedAt   time.Time            `bson:"created_at"`
 }
 
 func NewStatusRepository(db *mongo.Client) *StatusRepository {

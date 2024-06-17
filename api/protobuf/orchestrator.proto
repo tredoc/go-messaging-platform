@@ -7,7 +7,7 @@ import "google/protobuf/timestamp.proto";
 
 option go_package = "https://github.com/tredoc/go-messaging-platform/pb";
 
-enum MsgType {
+enum MessageType {
     SMS = 0;
     EMAIL = 1;
 }
@@ -29,7 +29,7 @@ service OrchestratorService {
 message SendMessageRequest {
     string message = 1;
     string template_uuid = 2;
-    MsgType type = 3;
+    MessageType type = 3;
     string sender = 4;
     string receiver = 5;
 }

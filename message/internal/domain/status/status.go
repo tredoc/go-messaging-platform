@@ -5,23 +5,23 @@ import (
 	"time"
 )
 
-type MsgStatus int
+type MessageStatus int
 
 const (
-	NEW       MsgStatus = 0
-	SENDING   MsgStatus = 1
-	COMPLETED MsgStatus = 2
-	FAILED    MsgStatus = 3
+	NEW       MessageStatus = 0
+	SENDING   MessageStatus = 1
+	COMPLETED MessageStatus = 2
+	FAILED    MessageStatus = 3
 )
 
 type Status struct {
 	uuid        string
-	status      MsgStatus
+	status      MessageStatus
 	messageUUID string
 	createdAt   time.Time
 }
 
-func NewStatus(uuid string, status MsgStatus, messageUUID string, createdAt time.Time) (Status, error) {
+func NewStatus(uuid string, status MessageStatus, messageUUID string, createdAt time.Time) (Status, error) {
 	if uuid == "" {
 		return Status{}, errors.New("empty uuid")
 	}
@@ -46,7 +46,7 @@ func NewStatus(uuid string, status MsgStatus, messageUUID string, createdAt time
 	}, nil
 }
 
-func UnmarshalFromDB(uuid string, status MsgStatus, messageUUID string, createdAt time.Time) (Status, error) {
+func UnmarshalFromDB(uuid string, status MessageStatus, messageUUID string, createdAt time.Time) (Status, error) {
 	return NewStatus(uuid, status, messageUUID, createdAt)
 }
 
@@ -54,7 +54,7 @@ func (s Status) UUID() string {
 	return s.uuid
 }
 
-func (s Status) Status() MsgStatus {
+func (s Status) Status() MessageStatus {
 	return s.status
 }
 

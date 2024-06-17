@@ -19,10 +19,10 @@ type TemplateRepository struct {
 }
 
 type TemplateDocument struct {
-	UUID      string            `bson:"_id"`
-	Content   string            `bson:"content"`
-	TmplType  template.TmplType `bson:"type"`
-	CreatedAt time.Time         `bson:"created_at"`
+	UUID      string                `bson:"_id"`
+	Content   string                `bson:"content"`
+	TmplType  template.TemplateType `bson:"type"`
+	CreatedAt time.Time             `bson:"created_at"`
 }
 
 func NewTemplateRepository(db *mongo.Client) *TemplateRepository {

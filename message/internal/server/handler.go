@@ -77,7 +77,7 @@ func (gh GRPCHandler) GetMessageByUUID(ctx context.Context, req *pb.GetMessageBy
 	if err != nil {
 		if errors.Is(err, repository.ErrStatusNotFound) {
 			resp.CreatedAt = timestamppb.New(msg.CreatedAt())
-			resp.Status = pb.MsgStatus_NEW
+			resp.Status = pb.MessageStatus_NEW
 			resp.UpdatedAt = timestamppb.New(msg.CreatedAt())
 
 			return resp, nil
@@ -87,7 +87,7 @@ func (gh GRPCHandler) GetMessageByUUID(ctx context.Context, req *pb.GetMessageBy
 	}
 
 	resp.CreatedAt = timestamppb.New(msgStatus.CreatedAt())
-	resp.Status = pb.MsgStatus(msgStatus.Status())
+	resp.Status = pb.MessageStatus(msgStatus.Status())
 	resp.UpdatedAt = timestamppb.New(msgStatus.CreatedAt())
 
 	return resp, nil
@@ -101,5 +101,5 @@ func (gh GRPCHandler) GetMessageStatusByMessageUUID(ctx context.Context, req *pb
 		return nil, err
 	}
 
-	return &pb.GetMessageStatusByMessageUUIDResponse{Uuid: sts.UUID(), MessageUuid: sts.MessageUUID(), Status: pb.MsgStatus(sts.Status()), CreatedAt: timestamppb.New(sts.CreatedAt())}, nil
+	return &pb.GetMessageStatusByMessageUUIDResponse{Uuid: sts.UUID(), MessageUuid: sts.MessageUUID(), Status: pb.MessageStatus(sts.Status()), CreatedAt: timestamppb.New(sts.CreatedAt())}, nil
 }

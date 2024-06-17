@@ -29,7 +29,7 @@ func (gs GRPCHandler) CreateTemplate(ctx context.Context, req *pb.CreateTemplate
 	content := req.GetContent()
 	tmplType := req.GetType()
 
-	t, err := template.NewTemplate(guuid.New().String(), content, template.TmplType(tmplType), time.Now())
+	t, err := template.NewTemplate(guuid.New().String(), content, template.TemplateType(tmplType), time.Now())
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, err.Error())
 	}
@@ -60,7 +60,7 @@ func (gs GRPCHandler) GetTemplate(ctx context.Context, req *pb.GetTemplateReques
 		return nil, status.Errorf(codes.InvalidArgument, err.Error())
 	}
 
-	return &pb.GetTemplateResponse{Uuid: t.UUID(), Content: t.Content(), Type: pb.TmplType(t.TmplType()), CreatedAt: timestamppb.New(t.CreatedAt())}, nil
+	return &pb.GetTemplateResponse{Uuid: t.UUID(), Content: t.Content(), Type: pb.TemplateType(t.TmplType()), CreatedAt: timestamppb.New(t.CreatedAt())}, nil
 }
 
 func (gs GRPCHandler) EnrichTemplate(ctx context.Context, req *pb.EnrichTemplateRequest) (*pb.EnrichTemplateResponse, error) {

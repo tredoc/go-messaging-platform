@@ -9,7 +9,7 @@ import (
 type SaveStatus struct {
 	UUID        string
 	MessageUUID string
-	Status      status.MsgStatus
+	Status      status.MessageStatus
 	CreatedAt   time.Time
 }
 

@@ -7,7 +7,7 @@ import "google/protobuf/timestamp.proto";
 
 option go_package = "https://github.com/tredoc/go-messaging-platform/pb";
 
-enum TmplType {
+enum TemplateType {
   SMS = 0;
   EMAIL = 1;
 }
@@ -37,7 +37,7 @@ service TemplateService {
 
 message CreateTemplateRequest {
   string content = 1;
-  TmplType type = 2;
+  TemplateType type = 2;
 }
 
 message CreateTemplateResponse {
@@ -51,7 +51,7 @@ message GetTemplateRequest {
 message GetTemplateResponse {
   string uuid = 1;
   string content = 2;
-  TmplType type = 3;
+  TemplateType type = 3;
   google.protobuf.Timestamp created_at = 4;
 }
 

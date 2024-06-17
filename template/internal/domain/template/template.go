@@ -10,11 +10,11 @@ import (
 	"time"
 )
 
-type TmplType int
+type TemplateType int
 
 const (
-	SMS   TmplType = 0
-	Email TmplType = 1
+	SMS   TemplateType = 0
+	Email TemplateType = 1
 )
 
 var (
@@ -25,11 +25,11 @@ var (
 type Template struct {
 	uuid      string
 	content   string
-	tmplType  TmplType
+	tmplType  TemplateType
 	createdAt time.Time
 }
 
-func NewTemplate(uuid string, content string, tmplType TmplType, createdAt time.Time) (*Template, error) {
+func NewTemplate(uuid string, content string, tmplType TemplateType, createdAt time.Time) (*Template, error) {
 	if tmplType != SMS && tmplType != Email {
 		return nil, errors.New("invalid template type")
 	}
@@ -53,7 +53,7 @@ func NewTemplate(uuid string, content string, tmplType TmplType, createdAt time.
 func UnmarshalFromDB(
 	uuid string,
 	content string,
-	tmplType TmplType,
+	tmplType TemplateType,
 	createdAt time.Time,
 ) (*Template, error) {
 	return NewTemplate(uuid, content, tmplType, createdAt)
@@ -121,7 +121,7 @@ func (t Template) Content() string {
 	return t.content
 }
 
-func (t Template) TmplType() TmplType {
+func (t Template) TmplType() TemplateType {
 	return t.tmplType
 }
 
