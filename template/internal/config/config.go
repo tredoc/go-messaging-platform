@@ -3,11 +3,19 @@ package config
 import (
 	"errors"
 	"os"
+	"strconv"
+)
+
+type Environment string
+
+const (
+	Development Environment = "dev"
+	Production  Environment = "prod"
 )
 
 type Config struct {
-	Port     string
-	Env      string
+	Port     int
+	Env      Environment
 	MongoURI string
 }
 
@@ -17,9 +25,18 @@ func GetConfig() (Config, error) {
 		return Config{}, errors.New("server port is not specified")
 	}
 
+	portInt, err := strconv.Atoi(port)
+	if err != nil {
+		return Config{}, errors.New("server port is not a number")
+	}
+
 	env := os.Getenv("ENV")
 	if env == "" {
 		return Config{}, errors.New("environment is not specified")
+	}
+
+	if Environment(env) != Development && Environment(env) != Production {
+		return Config{}, errors.New("environment is not valid")
 	}
 
 	mongoURI := os.Getenv("TEMPLATE_MONGO_URI")
@@ -28,8 +45,8 @@ func GetConfig() (Config, error) {
 	}
 
 	return Config{
-		Port:     port,
-		Env:      env,
+		Port:     portInt,
+		Env:      Environment(env),
 		MongoURI: mongoURI,
 	}, nil
 }

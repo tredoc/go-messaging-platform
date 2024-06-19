@@ -3,9 +3,11 @@ package repository
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/tredoc/go-messaging-platform/template/internal/domain/template"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"log/slog"
 	"time"
 )
 
@@ -16,6 +18,7 @@ const (
 
 type TemplateRepository struct {
 	coll *mongo.Collection
+	log  *slog.Logger
 }
 
 type TemplateDocument struct {
@@ -25,11 +28,16 @@ type TemplateDocument struct {
 	CreatedAt time.Time             `bson:"created_at"`
 }
 
-func NewTemplateRepository(db *mongo.Client) *TemplateRepository {
-	return &TemplateRepository{coll: db.Database(templateDB).Collection(templateCollection)}
+func NewTemplateRepository(db *mongo.Client, log *slog.Logger) *TemplateRepository {
+	return &TemplateRepository{
+		coll: db.Database(templateDB).Collection(templateCollection),
+		log:  log.With(slog.String("repository", "template")),
+	}
 }
 
 func (r *TemplateRepository) Save(ctx context.Context, t *template.Template) error {
+	r.log.Debug("TemplateRepository.Save", slog.Any("template", t))
+
 	td := TemplateDocument{
 		UUID:      t.UUID(),
 		Content:   t.Content(),
@@ -39,12 +47,14 @@ func (r *TemplateRepository) Save(ctx context.Context, t *template.Template) err
 
 	_, err := r.coll.InsertOne(ctx, td)
 	if err != nil {
+		r.log.Error("error saving template", slog.String("error", err.Error()))
 		return err
 	}
 	return nil
 }
 
 func (r *TemplateRepository) FindByUUID(ctx context.Context, uuid string) (*template.Template, error) {
+	r.log.Debug("TemplateRepository.FindByUUID", slog.String("uuid", uuid))
 	var tmpl TemplateDocument
 
 	filter := bson.D{{"_id", uuid}}
@@ -60,10 +70,19 @@ func (r *TemplateRepository) FindByUUID(ctx context.Context, uuid string) (*temp
 }
 
 func (r *TemplateRepository) DeleteByUUID(ctx context.Context, uuid string) error {
+	r.log.Debug("TemplateRepository.FindByUUID", slog.String("uuid", uuid))
+
 	filter := bson.D{{"_id", uuid}}
 	_, err := r.coll.DeleteOne(ctx, filter)
 	if err != nil {
-		return err
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			r.log.Debug("template not found", slog.String("uuid", uuid))
+			return ErrNotFound
+		}
+
+		r.log.Error("error deleting template", slog.String("error", err.Error()))
+		return fmt.Errorf("error deleting template: %w", err)
 	}
+
 	return nil
 }
