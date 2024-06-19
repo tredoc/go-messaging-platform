@@ -5,6 +5,7 @@ import (
 	"github.com/tredoc/go-messaging-platform/message/internal/domain/status"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"log/slog"
 	"time"
 )
 
@@ -12,6 +13,7 @@ const statusCollection = "statuses"
 
 type StatusRepository struct {
 	coll *mongo.Collection
+	log  *slog.Logger
 }
 
 type StatusDocument struct {
@@ -21,9 +23,11 @@ type StatusDocument struct {
 	CreatedAt   time.Time            `bson:"created_at"`
 }
 
-func NewStatusRepository(db *mongo.Client) *StatusRepository {
+func NewStatusRepository(db *mongo.Client, log *slog.Logger) *StatusRepository {
 	return &StatusRepository{
-		coll: db.Database(messageDB).Collection(statusCollection)}
+		coll: db.Database(messageDB).Collection(statusCollection),
+		log:  log.With(slog.String("repository", "status")),
+	}
 }
 
 func (r StatusRepository) SaveStatus(_ context.Context, _ status.Status) error {
@@ -31,6 +35,8 @@ func (r StatusRepository) SaveStatus(_ context.Context, _ status.Status) error {
 }
 
 func (r StatusRepository) FindStatusByUUID(ctx context.Context, uuid string) (status.Status, error) {
+	r.log.Debug("StatusRepository.FindStatusByUUID", slog.String("uuid", uuid))
+
 	var s StatusDocument
 
 	filter := bson.D{{"_id", uuid}}
@@ -43,6 +49,8 @@ func (r StatusRepository) FindStatusByUUID(ctx context.Context, uuid string) (st
 }
 
 func (r StatusRepository) FindStatusByMessageUUID(ctx context.Context, uuid string) (status.Status, error) {
+	r.log.Debug("StatusRepository.FindStatusByMessageUUID", slog.String("uuid", uuid))
+
 	var s StatusDocument
 
 	filter := bson.D{{"message_uuid", uuid}}

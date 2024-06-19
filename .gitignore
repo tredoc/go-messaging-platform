@@ -11,4 +11,9 @@
 /orchestrator/tmp
 /template/tmp
 
+/gateway/log.txt
+/message/log.txt
+/orchestrator/log.txt
+/template/log.txt
+
 .env

@@ -6,6 +6,7 @@ import (
 	"github.com/tredoc/go-messaging-platform/message/internal/domain/message"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"log/slog"
 	"time"
 )
 
@@ -13,6 +14,7 @@ const messageCollection = "messages"
 
 type MessageRepository struct {
 	coll *mongo.Collection
+	log  *slog.Logger
 }
 
 type MessageDocument struct {
@@ -24,13 +26,16 @@ type MessageDocument struct {
 	CreatedAt    time.Time `bson:"created_at"`
 }
 
-func NewMessageRepository(db *mongo.Client) *MessageRepository {
+func NewMessageRepository(db *mongo.Client, log *slog.Logger) *MessageRepository {
 	return &MessageRepository{
 		coll: db.Database(messageDB).Collection(messageCollection),
+		log:  log.With(slog.String("repository", "message")),
 	}
 }
 
 func (r MessageRepository) SaveMessage(ctx context.Context, msg message.Message) error {
+	r.log.Debug("MessageRepository.SaveMessage", slog.Any("message", msg))
+
 	_, err := r.coll.InsertOne(ctx, MessageDocument{
 		UUID:         msg.UUID(),
 		Message:      msg.Message(),
@@ -44,6 +49,8 @@ func (r MessageRepository) SaveMessage(ctx context.Context, msg message.Message)
 }
 
 func (r MessageRepository) FindMessageByUUID(ctx context.Context, uuid string) (message.Message, error) {
+	r.log.Debug("MessageRepository.FindMessageByUUID", slog.String("uuid", uuid))
+
 	var msg MessageDocument
 
 	filter := bson.D{{"_id", uuid}}
