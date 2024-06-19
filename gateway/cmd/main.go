@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/tredoc/go-messaging-platform/gateway/internal/config"
+	"github.com/tredoc/go-messaging-platform/gateway/internal/logger"
 	"github.com/tredoc/go-messaging-platform/gateway/internal/server"
 	"google.golang.org/protobuf/encoding/protojson"
 	"log"
@@ -12,8 +13,10 @@ import (
 func main() {
 	cfg, err := config.GetConfig()
 	if err != nil {
-		log.Fatalf("configuration error: %v", err)
+		panic("configuration error: " + err.Error())
 	}
+
+	logger.SetupLogger(cfg.Env)
 
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)

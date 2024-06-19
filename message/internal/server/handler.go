@@ -9,6 +9,8 @@ import (
 	"github.com/tredoc/go-messaging-platform/message/internal/query"
 	"github.com/tredoc/go-messaging-platform/message/internal/repository"
 	"github.com/tredoc/go-messaging-platform/message/pb"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"time"
 )
@@ -75,7 +77,7 @@ func (gh GRPCHandler) GetMessageByUUID(ctx context.Context, req *pb.GetMessageBy
 
 	msgStatus, err := gh.statusQuery.GetMessageStatus.Handle(ctx, query.GetMessageStatus{UUID: uuid})
 	if err != nil {
-		if errors.Is(err, repository.ErrStatusNotFound) {
+		if errors.Is(err, repository.ErrMsgNotFound) {
 			resp.CreatedAt = timestamppb.New(msg.CreatedAt())
 			resp.Status = pb.MessageStatus_NEW
 			resp.UpdatedAt = timestamppb.New(msg.CreatedAt())
@@ -98,6 +100,9 @@ func (gh GRPCHandler) GetMessageStatusByMessageUUID(ctx context.Context, req *pb
 
 	sts, err := gh.statusQuery.GetMessageStatus.Handle(ctx, query.GetMessageStatus{UUID: messageUUID})
 	if err != nil {
+		if errors.Is(err, repository.ErrStatusNotFound) {
+			return nil, status.Error(codes.NotFound, repository.ErrStatusNotFound.Error())
+		}
 		return nil, err
 	}
 

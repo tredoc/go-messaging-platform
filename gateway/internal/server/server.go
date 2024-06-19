@@ -7,7 +7,7 @@ import (
 	"github.com/tredoc/go-messaging-platform/gateway/internal/config"
 	"github.com/tredoc/go-messaging-platform/gateway/pb"
 	"google.golang.org/grpc"
-	"log"
+	"log/slog"
 	"net/http"
 )
 
@@ -29,6 +29,6 @@ func Run(ctx context.Context, cfg config.Config, mux *runtime.ServeMux) error {
 		return fmt.Errorf("failed to start HTTP/2 gateway: %w", err)
 	}
 
-	log.Printf("Starting grpc gateway on port: %s\n", cfg.Port)
-	return http.ListenAndServe(fmt.Sprintf(":%s", cfg.Port), mux)
+	slog.Info("Starting gateway server", slog.Any("environment", cfg.Env), slog.Int("port", cfg.Port))
+	return http.ListenAndServe(fmt.Sprintf(":%d", cfg.Port), HttpLogger(mux))
 }
