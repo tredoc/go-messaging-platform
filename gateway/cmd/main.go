@@ -7,7 +7,8 @@ import (
 	"github.com/tredoc/go-messaging-platform/gateway/internal/logger"
 	"github.com/tredoc/go-messaging-platform/gateway/internal/server"
 	"google.golang.org/protobuf/encoding/protojson"
-	"log"
+	"log/slog"
+	"os"
 )
 
 func main() {
@@ -31,6 +32,7 @@ func main() {
 
 	err = server.Run(ctx, cfg, mux)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error(err.Error())
+		os.Exit(1)
 	}
 }

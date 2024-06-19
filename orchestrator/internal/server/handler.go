@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"github.com/tredoc/go-messaging-platform/orchestrator/pb"
+	"log/slog"
 )
 
 type GRPCHandler struct {
@@ -11,7 +12,6 @@ type GRPCHandler struct {
 }
 
 func NewGRPCHandler(msgClient pb.MessageServiceClient, tmplClient pb.TemplateServiceClient) GRPCHandler {
-
 	return GRPCHandler{
 		msgClient:  msgClient,
 		tmplClient: tmplClient,
@@ -19,6 +19,8 @@ func NewGRPCHandler(msgClient pb.MessageServiceClient, tmplClient pb.TemplateSer
 }
 
 func (gs GRPCHandler) SendMessage(ctx context.Context, req *pb.SendMessageRequest) (*pb.SendMessageResponse, error) {
+	log := slog.Default().With(slog.String("method", "SendMessage"))
+
 	msg := req.GetMessage()
 	templateUUID := req.GetTemplateUuid()
 	sender := req.GetSender()
@@ -29,6 +31,7 @@ func (gs GRPCHandler) SendMessage(ctx context.Context, req *pb.SendMessageReques
 		Message: msg,
 	})
 	if err != nil {
+		log.Error("failed to enrich template", slog.String("error", err.Error()))
 		return nil, err
 	}
 
@@ -39,6 +42,7 @@ func (gs GRPCHandler) SendMessage(ctx context.Context, req *pb.SendMessageReques
 		TemplateUuid: templateUUID,
 	})
 	if err != nil {
+		log.Error("failed to persist message", slog.String("error", err.Error()))
 		return nil, err
 	}
 
