@@ -6,10 +6,19 @@ import (
 	"github.com/tredoc/go-messaging-platform/gateway/internal/config"
 	"github.com/tredoc/go-messaging-platform/gateway/internal/logger"
 	"github.com/tredoc/go-messaging-platform/gateway/internal/server"
+	"golang.org/x/sync/errgroup"
 	"google.golang.org/protobuf/encoding/protojson"
 	"log/slog"
 	"os"
+	"os/signal"
+	"syscall"
 )
+
+var interruptSignals = []os.Signal{
+	os.Interrupt,
+	syscall.SIGTERM,
+	syscall.SIGINT,
+}
 
 func main() {
 	cfg, err := config.GetConfig()
@@ -18,10 +27,10 @@ func main() {
 	}
 
 	logger.SetupLogger(cfg.Env)
+	log := slog.Default()
 
-	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
+	ctx, stop := signal.NotifyContext(context.Background(), interruptSignals...)
+	defer stop()
 
 	mux := runtime.NewServeMux(runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{
 		MarshalOptions: protojson.MarshalOptions{
@@ -30,9 +39,13 @@ func main() {
 		},
 	}))
 
-	err = server.Run(ctx, cfg, mux)
+	waitGroup, ctx := errgroup.WithContext(ctx)
+
+	server.Run(ctx, waitGroup, cfg, mux)
+
+	err = waitGroup.Wait()
 	if err != nil {
-		slog.Error(err.Error())
-		os.Exit(1)
+		log.Error("error from wait group: " + err.Error())
 	}
+
 }
