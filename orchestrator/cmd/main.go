@@ -6,9 +6,18 @@ import (
 	"github.com/tredoc/go-messaging-platform/orchestrator/internal/config"
 	"github.com/tredoc/go-messaging-platform/orchestrator/internal/logger"
 	"github.com/tredoc/go-messaging-platform/orchestrator/internal/server"
+	"golang.org/x/sync/errgroup"
 	"log/slog"
 	"os"
+	"os/signal"
+	"syscall"
 )
+
+var interruptSignals = []os.Signal{
+	os.Interrupt,
+	syscall.SIGTERM,
+	syscall.SIGINT,
+}
 
 func main() {
 	cfg, err := config.GetConfig()
@@ -19,9 +28,8 @@ func main() {
 	logger.SetupLogger(cfg.Env)
 	log := slog.Default()
 
-	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
+	ctx, stop := signal.NotifyContext(context.Background(), interruptSignals...)
+	defer stop()
 
 	msgClient, err := client.RunMessageClient(ctx, cfg)
 	if err != nil {
@@ -37,9 +45,12 @@ func main() {
 
 	grpcHandler := server.NewGRPCHandler(msgClient, templateClient)
 
-	err = server.Run(ctx, cfg, grpcHandler)
+	waitGroup, ctx := errgroup.WithContext(ctx)
+
+	server.Run(ctx, waitGroup, cfg, grpcHandler)
+
+	err = waitGroup.Wait()
 	if err != nil {
-		log.Error(err.Error())
-		os.Exit(1)
+		log.Error("error from wait group: " + err.Error())
 	}
 }
