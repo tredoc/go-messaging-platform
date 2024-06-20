@@ -8,9 +8,18 @@ import (
 	"github.com/tredoc/go-messaging-platform/template/internal/query"
 	"github.com/tredoc/go-messaging-platform/template/internal/repository"
 	"github.com/tredoc/go-messaging-platform/template/internal/server"
+	"golang.org/x/sync/errgroup"
 	"log/slog"
 	"os"
+	"os/signal"
+	"syscall"
 )
+
+var interruptSignals = []os.Signal{
+	os.Interrupt,
+	syscall.SIGTERM,
+	syscall.SIGINT,
+}
 
 func main() {
 	cfg, err := config.GetConfig()
@@ -20,11 +29,10 @@ func main() {
 
 	log := logger.GetLogger(cfg.Env)
 
-	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
+	ctx, stop := signal.NotifyContext(context.Background(), interruptSignals...)
+	defer stop()
 
-	mng, err := repository.RunMongo(cfg)
+	mng, err := repository.RunMongo(ctx, cfg)
 	if err != nil {
 		log.Error("mongo connection error: "+err.Error(), slog.Any("env", cfg.Env))
 		os.Exit(1)
@@ -38,9 +46,12 @@ func main() {
 	queries := query.NewQuery(repo, log)
 	handler := server.NewGRPCHandler(commands, queries)
 
-	err = server.Run(ctx, cfg, handler, log)
+	waitGroup, ctx := errgroup.WithContext(ctx)
+
+	server.Run(ctx, waitGroup, cfg, handler, log)
+
+	err = waitGroup.Wait()
 	if err != nil {
-		log.Error("message server run error: "+err.Error(), slog.Any("env", cfg.Env))
-		os.Exit(1)
+		log.Error("error from wait group: " + err.Error())
 	}
 }

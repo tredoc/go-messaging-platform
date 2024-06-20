@@ -5,10 +5,9 @@ import (
 	"github.com/tredoc/go-messaging-platform/template/internal/config"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
 )
 
-func RunMongo(cfg config.Config) (*mongo.Client, error) {
+func RunMongo(ctx context.Context, cfg config.Config) (*mongo.Client, error) {
 	clientOptions := options.Client().ApplyURI(cfg.MongoURI)
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 
@@ -16,13 +15,11 @@ func RunMongo(cfg config.Config) (*mongo.Client, error) {
 		return nil, err
 	}
 
-	err = client.Ping(context.TODO(), nil)
+	err = client.Ping(ctx, nil)
 
 	if err != nil {
 		return nil, err
 	}
-
-	log.Println("Connected to MongoDB!")
 
 	return client, nil
 }
